@@ -297,45 +297,43 @@
  
 
   <section class="chart-section">
-    <div class="container-fluid">
-        <h2 class="text-center section-title">Exploring Zimbabwe's Religious Mosaic</h2>
-        <h3 class="text-center mb-4">
-      A Province-by-Province Exploration of Religious Diversity.
-    </h3>
+        <div class="container-fluid">
+            <h2 class="text-center section-title">Exploring Zimbabwe's Religious Mosaic</h2>
+            <h3 class="text-center mb-4">A Province-by-Province Exploration of Religious Diversity</h3>
 
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-                <div id="bump-chart" class="chart-container">
-                    <canvas id="myChart"></canvas>
-                </div>
-                <div class="dropdown-container text-center my-4">
-                    <label for="religionSelect" class="me-2">Select a Religion:</label>
-                    <select id="religionSelect" class="form-select d-inline-block w-auto">
-                        <option value="1">Roman Catholic</option>
-                        <option value="2">African Tradition</option>
-                        <option value="3">Protestant</option>
-                        <option value="4">Apostolic Sect</option>
-                        <option value="5">Pentecost</option>
-                        <option value="6">Other Christian</option>
-                        <option value="7">Islam</option>
-                        <option value="8">Judaism</option>
-                        <option value="9">Hinduism</option>
-                        <option value="10">None</option>
-                        <option value="11">Other</option>
-                    </select>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="dropdown-container text-center my-4">
+                        <label for="religionSelect" class="me-2">Select a Religion:</label>
+                        <select id="religionSelect" class="form-select d-inline-block w-auto">
+                            <option value="1">Roman Catholic</option>
+                            <option value="2">African Tradition</option>
+                            <option value="3">Protestant</option>
+                            <option value="4">Apostolic Sect</option>
+                            <option value="5">Pentecost</option>
+                            <option value="6">Other Christian</option>
+                            <option value="7">Islam</option>
+                            <option value="8">Judaism</option>
+                            <option value="9">Hinduism</option>
+                            <option value="10">None</option>
+                            <option value="11">Other</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+
+            <div id="tooltip" class="tooltip"></div>
+
+            <h2 class="text-center section-title mt-4">
+                <p class="chart-description text-center">
+                    Interactive chart showing religion in each province by Gender
+                </p>
+            </h2>
         </div>
-
-        <div id="tooltip" class="tooltip"></div>
-
-        <h2 class="text-center section-title mt-4">
-            <p class="chart-description text-center">
-                Interactive chart showing religion in each province by Gender
-            </p>
-        </h2>
-    </div>
-</section>
+    </section>
 
 
   <section id="blog" class="blog py-5">
@@ -507,7 +505,9 @@
                                  data: [9315,55759,76123,51829,70976,33774,28438,45708,37581,44835],
                                  borderWidth: 1,
                                  borderColor: '#36A2EB',
-                                 backgroundColor: '#9BD0F5'
+                                 backgroundColor: '#9BD0F5',
+                                 fill: false,
+			                    tension: 0.4
                                  
 
                                  },
@@ -516,33 +516,55 @@
                                  data: [6638,42117,45331,32511,44844,24618,19480,31152,27450,34181,],
                                  borderWidth: 1,
                                  borderColor: '#FF6384',
-                                 backgroundColor: '#FFB1C1'
+                                 backgroundColor: '#FFB1C1',
+                                 fill: false,
+			                    tension: 0.4
                                  }
                              ]
                              
                          },
                      options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                         plugins: {
-                             title: {
-                                 display: true, // Show the title (default: false)
-                                 text: 'African Traditional Religion', // Text to display
-                                 color: 'black', // Title text color
-                                 position: 'top', // Title position (top, bottom)
-                                 fontSize: 16, // Font size
-                                 fontStyle: 'bold', // Font style
-                                 padding: {
-                                 top: 10, // Padding above the title
-                                 bottom: 5 // Padding below the title
-                                 }
-                             }
-                         },
-                         scales: {
-                             y: {
-                                 beginAtZero: true
-                             }
-                         }
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                              title: {
+                                  display: true,
+                                  text: 'African Traditional Religion',
+                                  color: 'white',
+                                  font: {
+                                      size: 16,
+                                      weight: 'bold'
+                                  },
+                                  padding: {
+                                      top: 10,
+                                      bottom: 30
+                                  }
+                              },
+                              legend: {
+                                  labels: {
+                                      color: 'white'
+                                  }
+                              }
+                          },
+                          scales: {
+                              y: {
+                                  beginAtZero: true,
+                                  grid: {
+                                      color: 'rgba(255, 255, 255, 0.1)'
+                                  },
+                                  ticks: {
+                                      color: 'white'
+                                  }
+                              },
+                              x: {
+                                  grid: {
+                                      color: 'rgba(255, 255, 255, 0.1)'
+                                  },
+                                  ticks: {
+                                      color: 'white'
+                                  }
+                              }
+                          }
                      }
              });
          </script>
