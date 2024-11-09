@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep Dive Data</title>
+    <title>Belenga $130 a month Budget Planner - Deep Dive Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
             --primary-color: #e43f5a;
@@ -21,7 +21,7 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-color);
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
         .navbar {
             background-color: var(--bg-light);
@@ -32,155 +32,6 @@
         .nav-link:hover {
             color: var(--primary-color) !important;
         }
-        .hero-section {
-            background-color: var(--bg-light);
-            padding: 80px 0;
-            text-align: center;
-        }
-        .hero-section h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        .chart-section {
-            background-color: var(--bg-contrast);
-            padding: 60px 0;
-        }
-        .explore-section {
-            background-color: var(--bg-light);
-            padding: 60px 0;
-        }
-        .chart-card {
-            background-color: var(--bg-dark);
-            border: none;
-            border-radius: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .chart-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .chart-image-container {
-            background-color: var(--bg-lighter);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .chart-description {
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        footer {
-            background-color: var(--bg-light);
-            color: var(--text-muted);
-            padding: 20px 0;
-        }
-        footer a {
-            color: var(--text-color);
-            text-decoration: none;
-        }
-        footer a:hover {
-            color: var(--primary-color);
-        }
-        .section-title {
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-        }
-        .card-container {
-            background-color: var(--bg-lighter);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        /* Bump Chart Styles */
-        .line {
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            opacity: 0.8;
-        }
-        .dot {
-            stroke-width: 2;
-            cursor: pointer;
-            transition: r 0.3s, fill 0.3s;
-        }
-        .dot:hover {
-            fill: var(--secondary-color);
-        }
-        .tooltip {
-            position: absolute;
-            text-align: center;
-            padding: 8px;
-            font-size: 14px;
-            background: rgba(50, 50, 50, 0.85);
-            color: white;
-            border-radius: 5px;
-            pointer-events: none;
-            opacity: 0;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-            transition: opacity 0.3s;
-        }
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: var(--text-muted);
-            shape-rendering: crispEdges;
-        }
-        #bump-chart svg {
-            width: 100%;
-            height: auto;
-        }
-        #bump-chart {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .blog .blog-details {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-        }
-        .article {
-            background-color: var(--bg-lighter);
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        .article h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .article .meta-top {
-            margin-bottom: 20px;
-        }
-        .article .meta-top ul {
-            padding: 0;
-            list-style: none;
-        }
-        .article .meta-top li {
-            display: inline;
-            margin-right: 15px;
-        }
-        .article .content {
-            color: var(--text-color);
-        }
-        .article .post-img {
-            margin-bottom: 20px;
-        }
-        .article .post-img img {
-            border-radius: 10px;
-        }
-        /* New Breadcrumb Styles */
         .breadcrumbs {
             padding: 15px 0;
             background-color: var(--bg-lighter);
@@ -194,13 +45,13 @@
             padding: 0;
             font-size: 16px;
             font-weight: 600;
-            color: var(--color-default);
+            color: var(--text-color);
         }
         .breadcrumbs nav ol li+li::before {
             display: inline-block;
             padding-right: 10px;
             padding-left: 10px;
-            color: var(--color-secondary);
+            color: var(--secondary-color);
             content: "/";
         }
         .breadcrumbs nav ol li a {
@@ -211,60 +62,67 @@
         .breadcrumbs nav ol li a:hover {
             color: var(--primary-color);
         }
-        /* Add these styles to your existing CSS */
-    .chart-container {
-        position: relative;
-        margin: auto;
-        height: 60vh;
-        min-height: 300px;
-        width: 100%;
-    }
-
-    @media (min-width: 768px) {
-        .chart-container {
-            height: 70vh;
+        .main-container {
+            background-color: var(--bg-contrast);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
         }
-    }
-
-    @media (min-width: 992px) {
-        .chart-container {
-            height: 80vh;
+        h1, h2 {
+            color: var(--primary-color);
         }
-    }
-
-    #myChart {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .dropdown-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #religionSelect {
-        max-width: 200px;
-    }
-
-    @media (max-width: 576px) {
-        .dropdown-container {
-            flex-direction: column;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
-
-        #religionSelect {
-            width: 100%;
-            max-width: none;
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
         }
-    }
+        .btn-secondary {
+            background-color: var(--bg-lighter);
+            border-color: var(--bg-lighter);
+        }
+        .list-group-item {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            border-color: var(--bg-lighter);
+        }
+        .input-group input {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            border-color: var(--bg-lighter);
+        }
+        .input-group input::placeholder {
+            color: var(--text-muted);
+        }
+        footer {
+            background-color: var(--bg-light);
+            color: var(--text-muted);
+            padding: 20px 0;
+        }
+        footer a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: var(--primary-color);
+        }
     </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRPV64YPR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GVRPV64YPR');
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a href="../index.html" class="navbar-brand d-flex align-items-center">
-                <img src="../img/1.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+            <a href="index.html" class="navbar-brand d-flex align-items-center">
+                <img src="img/1.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
                 Deep Dive Data
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -272,162 +130,190 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <!--<li class="nav-item"><a class="nav-link" href="#">Insights</a></li>-->
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="blog.html">Explore Data</a></li>
-                    <!--<li class="nav-item"><a class="nav-link" href="#">Insights</a></li>-->
-                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    
-    <!-- New Breadcrumbs Section -->
+
     <div class="breadcrumbs">
         <div class="container">
             <nav>
                 <ol>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="../blog.html">Explore Data</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="blog.html">Explore Data</a></li>
                     <li>Belenga $130 a month Budget Planner</li>
                 </ol>
             </nav>
         </div>
     </div>
 
- 
-
-  <section class="chart-section">
-    <div class="container-fluid">
-        <h2 class="text-center section-title">Belenga $130 a month Budget Planner</h2>
-        <h3 class="text-center mb-4">Budgeting on a shoestring: A tool for Zimbabweans perspective.</h3>
-
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-                <div id="bump-chart" class="chart-container">
-
-                    
-                    
-                    
-      <div class="col-md-6 mb-4">
-        <canvas id="budgetChart"></canvas>
-      </div>
-      <div class="col-md-6">
-        <ul id="itemsList" class="list-group mb-3">
-          <!-- Existing items will be populated here -->
-        </ul>
-        <div class="total-container mb-3 text-end">
-          <strong>Total Selected: $<span id="totalValue">0</span></strong>
-        </div>
-        <div class="input-group mb-3">
-          <input type="text" id="itemName" class="form-control" placeholder="Item Name">
-          <input type="number" id="itemValue" class="form-control" placeholder="Item Value">
-          <button id="addItemButton" class="btn btn-primary">Add Item</button>
-        </div>
-        <button id="toggleButton" class="btn btn-secondary w-100">Show Daily Costs</button>
-      </div>
-    
+    <div class="container my-4">
+        <div class="main-container">
+            <h1 class="text-center mb-4">Belenga $130 a month Budget Planner</h1>
+            <p class="mb-4">
+                Our Price Perception Tool leverages data from Zimstat to visualize the purchasing power of the average Zimbabwean. Struggling to price your product for the Zimbabwean market? Our tool provides the solution by comparing your cost to real-world budgets. It offers a prefilled budget with a target total of $130, allowing you to adjust values to accommodate your product's extra cost. This enables you to find the perfect price point. Designed for product teams, this tool helps you understand your customers' financial realities and make data-driven pricing decisions.
+            </p>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <canvas id="budgetChart"></canvas>
                 </div>
-              
-            </div>
-        </div>
-
-        <div id="tooltip" class="tooltip"></div>
-
-        
-    </div>
-</section>
-
-
-  <section id="blog" class="blog py-5">
-        <div class="container">
-            <article class="article">
-                <h2 class="mb-4">Belenga $130 a month Budget Planner</h2>
-
-                <div class="meta-top mb-4">
-                    <ul>
-                        <li class="d-flex align-items-center"><i class="fas fa-user me-2"></i>Belenga Dev</li>
-                        <li class="d-flex align-items-center"><i class="fas fa-calendar me-2"></i><time datetime="2023-12-23">Dec 23, 2023</time></li>
+                <div class="col-md-6">
+                    <ul id="itemsList" class="list-group mb-3">
+                        <!-- Existing items will be populated here -->
                     </ul>
-                </div>
-
-                <div class="content">
-                    <h5 class="mt-4">Belenga $130 a month Budget Planner</h5>
-                    <p>   Our Price Perception Tool leverages data from Zimstat to visualize the purchasing power of the average Zimbabwean. Struggling to price your product for the Zimbabwean market? Our tool provides the solution by comparing your cost to real-world budgets. It offers a prefilled budget with a target total of $130, allowing you to adjust values to accommodate your product’s extra cost. This enables you to find the perfect price point. Designed for product teams, this tool helps you understand your customers' financial realities and make data-driven pricing decisions.</p>
-                    
-                    
-
-                    
-                    
-
-                    
-
-                </div>
-            </article>
-        </div>
-    </section>
-
-
-    <section class="explore-section">
-    <div class="container">
-        <h2 class="text-center section-title">Explore More Charts</h2>
-        <div class="card-container">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                    <div class="card chart-card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" style="color: #e0e0e0;">Exploring Zimbabwe's Religious Mosaic</h5>
-                            <div class="post-img">
-                                <img src="../img/Zimbabwe Religious 2.png" alt="Zimbabwe Religious Mosaic" class="img-fluid">
-                            </div>
-                            <p class="card-text flex-grow-1" style="color: #e0e0e0;">
-                                A Province-by-Province Exploration of Religious Diversity.
-                            </p>
-                            <a href="../articles/Zimbabwe-Religious-Mosaic.html" class="btn btn-primary mt-3">Explore Chart</a>
-                        </div>
+                    <div class="total-container mb-3 text-end">
+                        <strong>Total Selected: $<span id="totalValue">0</span></strong>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card chart-card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" style="color: #e0e0e0;">Shifting Priorities in Lending</h5>
-                            <div class="post-img">
-                                <img src="../img/Shifting Priorities in Lending.png" alt="" class="img-fluid">
-                            </div>
-                            <p class="card-text flex-grow-1" style="color: #e0e0e0;">
-                                How Each Bank Allocates Funds Across Categories
-                            </p>
-                            <a href="../articles/Shifting Priorities in Lending.html" class="btn btn-primary mt-3">Explore Chart</a>
-                        </div>
+                    <div class="input-group mb-3">
+                        <input type="text" id="itemName" class="form-control" placeholder="Item Name">
+                        <input type="number" id="itemValue" class="form-control" placeholder="Item Value">
+                        <button id="addItemButton" class="btn btn-primary">Add Item</button>
                     </div>
+                    <button id="toggleButton" class="btn btn-secondary w-100">Show Daily Costs</button>
                 </div>
             </div>
         </div>
     </div>
-</section>
 
-        <footer class="text-center mt-5">
+    <footer class="text-center mt-5">
         <div class="container">
-            <p>&copy; 2024 Deep Dive Data </p>
-            <!--<p>&copy; 2024 Deep Dive Data | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>-->
+            <p>&copy; 2024 Deep Dive Data</p>
             <div class="mt-3">
-                <a href="https://x.com/DeepDiveDataZW" class="me-3"><i class="fab fa-twitter"></i></a>
-                <a href="https://www.linkedin.com/company/deepdivedatazw/" class="me-3"><i class="fab fa-linkedin"></i></a>
-                <!--<a href="#"><i class="fab fa-github"></i></a>-->
+                <a href="https://twitter.com/DeepDiveDataZW" target="_blank" rel="noopener noreferrer" class="me-3"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/deepdivedatazw/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-      
-<link rel="stylesheet" href="../css//style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script>
+        let myChart;
+        let items = [
+            { name: "Rent", value: 50 },
+            { name: "Food", value: 40 },
+            { name: "Transport", value: 20 },
+            { name: "Utilities", value: 15 },
+            { name: "Miscellaneous", value: 5 }
+        ];
+        let showingDaily = false;
 
-    <script src="../js/script.js"></script>
-    <script src="../js//chart.js"></script>
+        function updateChart() {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            const total = items.reduce((sum, item) => sum + item.value, 0);
 
-       
-         
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: items.map(item => item.name),
+                    datasets: [{
+                        data: items.map(item => item.value),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#36A2EB'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            color: '#fff',
+                            formatter: (value, ctx) => {
+                                let sum = 0;
+                                let dataArr = ctx.chart.data.datasets[0].data;
+                                dataArr.map(data => {
+                                    sum += data;
+                                });
+                                let percentage = (value * 100 / sum).toFixed(2) + "%";
+                                return percentage;
+                            },
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateItemsList() {
+            const itemsList = document.getElementById('itemsList');
+            itemsList.innerHTML = '';
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `
+                    ${item.name}
+                    <span>
+                        $${showingDaily ? (item.value / 30).toFixed(2) : item.value.toFixed(2)}
+                        <button class="btn btn-danger btn-sm ms-2" onclick="removeItem(${index})">Remove</button>
+                    </span>
+                `;
+                itemsList.appendChild(li);
+            });
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const total = items.reduce((sum, item) => sum + item.value, 0);
+            document.getElementById('totalValue').textContent = showingDaily ? (total / 30).toFixed(2) : total.toFixed(2);
+        }
+
+        function addItem() {
+            const name = document.getElementById('itemName').value;
+            const value = parseFloat(document.getElementById('itemValue').value);
+            if (name && !isNaN(value)) {
+                items.push({ name, value });
+                updateChart();
+                updateItemsList();
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemValue').value = '';
+            }
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1);
+            updateChart();
+            updateItemsList();
+        }
+
+        document.getElementById('addItemButton').addEventListener('click', addItem);
+
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            showingDaily = !showingDaily;
+            this.textContent = showingDaily ? 'Show Monthly Costs' : 'Show Daily Costs';
+            updateItemsList();
+        });
+
+        updateChart();
+        updateItemsList();
+
+        window.addEventListener('resize', function() {
+            if (myChart) {
+                myChart.resize();
+            }
+        });
+    </script>
 </body>
 </html>
