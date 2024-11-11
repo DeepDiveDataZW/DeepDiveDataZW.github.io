@@ -7,6 +7,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRPV64YPR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GVRPV64YPR');
+  </script>
     <style>
         :root {
             --primary-color: #e43f5a;
@@ -285,6 +293,27 @@
             { year: 2024, Individuals: 13, Agriculture: 9, Manufacturing: 65, Distribution: 3, Services: 7, Mining: 3 }
         ];
 
+        const dataset3 = [
+            { year: 2018, Individuals: 51, Agriculture: 35, Manufacturing: 7, Communication: 0, Construction: 1, Transport: 0, Services: 3, Mining: 2, Distribution: 1 },
+            { year: 2019, Individuals: 45, Agriculture: 37, Manufacturing: 4, Communication: 0, Construction: 0, Transport: 0, Services: 8, Mining: 1, Distribution: 5 },
+            { year: 2020, Individuals: 34.1, Agriculture: 57.8, Manufacturing: 5.3, Communication: 0, Construction: 0.2, Transport: 0, Services: 0.9, Mining: 0.1, Distribution: 1.6 },
+            { year: 2021, Individuals: 38.36, Agriculture: 51.39, Manufacturing: 5.33, Communication: 0.03, Construction: 0.14, Transport: 0.13, Services: 1.10, Mining: 2.43, Distribution: 1.08 },
+            { year: 2022, Individuals: 41.16, Agriculture: 27.03, Manufacturing: 5.29, Communication: 0.00, Construction: 0.17, Transport: 1.75, Services: 8.88, Mining: 7.36, Distribution: 8.36 },
+            { year: 2023, Individuals: 32.38, Agriculture: 55.33, Manufacturing: 3.73, Communication: 0.00, Construction: 0.00, Transport: 1.01, Services: 1.71, Mining: 5.34, Distribution: 0.50 }
+        ];
+
+        const dataset4 = [
+            { year: 2018, Individuals: 28.70, Agriculture: 24.26, Mining: 3.25, Manufacturing: 8.01, Distribution: 16.48, Construction: 1.55, Transport: 1.23, Communication: 0.26, Services: 14.01, Financial_Organizations: 2.25 },
+            { year: 2019, Individuals: 5.58, Agriculture: 68.81, Mining: 3.75, Manufacturing: 4.04, Distribution: 9.35, Construction: 0.25, Transport: 0.37, Communication: 0.03, Services: 7.28, Financial_Organizations: 0.53 },
+            { year: 2020, Individuals: 6.91, Agriculture: 55.30, Mining: 10.08, Manufacturing: 2.67, Distribution: 19.67, Construction: 0.18, Transport: 0.24, Communication: 0.01, Services: 4.04, Financial_Organizations: 0.90 },
+            { year: 2021, Individuals: 10.02, Agriculture: 50.56, Mining: 7.37, Manufacturing: 4.34, Distribution: 17.92, Construction: 0.19, Transport: 0.14, Communication: 0.00, Services: 8.76, Financial_Organizations: 0.70 },
+            { year: 2022, Individuals: 10.02, Agriculture: 35.74, Mining: 10.04, Manufacturing: 12.89, Distribution: 17.17, Construction: 1.28, Transport: 0.26, Communication: 2.63, Services: 9.81, Financial_Organizations: 0.14 },
+            { year: 2023, Individuals: 26.20, Agriculture: 12.17, Mining: 19.06, Manufacturing: 16.39, Distribution: 16.07, Construction: 1.19, Transport: 0.35, Communication: 4.24, Services: 4.07, Financial_Organizations: 0.26 }
+        ];
+
+        
+
+
         let currentData = dataset1;
 
         const margin = { top: 40, right: 40, bottom: 50, left: 125 },
@@ -417,56 +446,61 @@
             });
 
             svg.append("g")
-                .attr("transform", `translate(0,${chartHeight})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")))
-                .selectAll("text")
-                .style("font-size", "15px");
+                    .attr("transform", `translate(0,${chartHeight+19})`)
+                    .call(d3.axisBottom(x).tickFormat(d3.format("d")))
+                    .selectAll("text")
+                    .style("font-size", "15px");
 
             svg.append("text")
-                .attr("class", "x-axis-label")
-                .attr("x", chartWidth / 2)
-                .attr("y", chartHeight + margin.bottom - 10)
-                .style("text-anchor", "middle")
-                .style("font-size", "14px")
-                .text("Year");
+                    .attr("class", "x-axis-label")
+                    .attr("x", chartWidth / 2)
+                    .attr("y", chartHeight + margin.bottom  )
+                    .style("text-anchor", "middle")
+                    .style("font-size", "15px")
+                    .style("fill", "white")  // Set text color to white
+                    .text("Year of Annual Report");
 
             svg.append("g")
-                .attr("transform", `translate(-10, 0)`)
-                .call(d3.axisLeft(y).ticks(rankData[0].ranks.length).tickFormat(d => d))
-                .selectAll("text")
-                .style("font-size", "11px");
+                    .attr("transform", `translate(-22, 0)`)
+                    .call(d3.axisLeft(y).ticks(rankData[0].ranks.length).tickFormat(d => d))
+                    .selectAll("text")
+                    .style("font-size", "14px")
+                    .style("fill", "white");  // Set text color to white ranking text
 
-            svg.append("text")
-                .attr("class", "y-axis-label")
-                .attr("x", -chartHeight / 2)
-                .attr("y", -margin.left + 50)
-                .attr("transform", "rotate(-90)")
-                .style("text-anchor", "middle")
-                .style("font-size", "11px")
-                .text("Rank");
+           svg.append("text")
+                    .attr("class", "y-axis-label")
+                    .attr("x", -chartHeight / 2)
+                    .attr("y", -margin.left + 16)
+                    .attr("transform", "rotate(-90)")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "22px")
+                    .style("fill", "white")  // Set text color to white rank word
+                    .text("Rank");
+
+
 
             const initialYear = rankData[0];
-            svg.selectAll(".rank-label")
-                .data(initialYear.ranks)
-                .enter().append("text")
-                .attr("class", "rank-label")
-                .attr("x", -70)
-                .attr("y", (d, i) => y(i + 1))
-                .attr("dy", ".35em")
-                .attr("text-anchor", "end")
-                .style("font-size", "11px")
-                .style("fill", d => color[d])
-                .each(function(d) {
-                    const textElement = d3.select(this);
-                    const lines = d.split("_");
-                    textElement.text("");
-                    lines.forEach((line, i) => {
-                        textElement.append("tspan")
-                            .attr("x", -50)
-                            .attr("dy", i === 0 ? 0 : "1.2em")
-                            .text(line);
+                svg.selectAll(".rank-label")
+                    .data(initialYear.ranks)
+                    .enter().append("text")
+                    .attr("class", "rank-label")
+                    .attr("x", -70)
+                    .attr("y", (d, i) => y(i + 1))
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "end")
+                    .style("font-size", "11px")
+                    .style("fill", d => color[d])
+                    .each(function(d) {
+                        const textElement = d3.select(this);
+                        const lines = d.split("_");
+                        textElement.text("");
+                        lines.forEach((line, i) => {
+                            textElement.append("tspan")
+                                .attr("x", -45)
+                                .attr("dy", i === 0 ? 0 : "1.2em")
+                                .text(line);
+                        });
                     });
-                });
         }
 
         document.querySelectorAll("input[name='dataset']").forEach(radio => {
