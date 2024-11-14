@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Tax Receipt Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            padding: 2rem;
+            background-color: #f0f0f0;
+        }
+        .receipt {
+            width: 100%;
+            max-width: 900px;
+            padding: 2rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            position: relative;
+        }
+        .receipt::-webkit-scrollbar {
+            width: 12px;
+        }
+        .receipt::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .receipt::-webkit-scrollbar-thumb {
+            background-color: #007bff;
+            border-radius: 6px;
+            border: 3px solid #f1f1f1;
+        }
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .receipt-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .receipt-date {
+            font-style: italic;
+        }
+        .amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .department-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px dotted #ccc;
+            padding: 0.5rem 0;
+        }
+        .department-name {
+            flex: 1 1 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        .department-icon {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        .department-amount {
+            text-align: right;
+            min-width: 120px;
+            padding-left: 1rem;
+        }
+        .department-percentage {
+            text-align: right;
+            min-width: 80px;
+            padding-left: 1rem;
+            color: #666;
+        }
+        .total-row {
+            font-weight: bold;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 0.5rem 0;
+            margin-top: 1rem;
+        }
+        .chart {
+            margin-top: 2rem;
+            border-top: 2px dashed #000;
+            padding-top: 1rem;
+        }
+        .chart-bar {
+            height: 20px;
+            background-color: #007bff;
+            margin-bottom: 5px;
+            transition: width 0.3s ease;
+        }
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .top-departments .chart-bar {
+            background-color: #0056b3;
+        }
+        .highlight-row {
+            background-color: #f8f9fa;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.75rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #007bff;
+        }
+        .highlight-row .department-name,
+        .highlight-row .department-amount {
+            color: #007bff;
+        }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #007bff;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .receipt {
+                box-shadow: none;
+                /*max-height: none;
+                overflow-y: visible;*/
+            }
+            .no-print, .scroll-indicator {
+                display: none;
+            }
+            .highlight-row {
+                background-color: #f0f0f0;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .receipt {
+                padding: 1rem;
+            }
+            .department-row {
+                font-size: 0.9rem;
+            }
+            .department-amount, .department-percentage {
+                min-width: auto;
+                padding-left: 0.5rem;
+            }
+            .highlight-row {
+                font-size: 1.1rem;
+            }
+        }
+        .logo {
+            max-width: 100px;
+            height: auto;
+        }
+        .receipt-header a {
+            font-size: 0.9rem;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="receipt" id="receipt">
+            <div class="receipt-header">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <img src="img/1.png" alt="Deep Dive Data Logo" class="logo me-3">
+                    <div>
+                        <div class="receipt-title">PAYE Tax Receipt(Zimbabwe)</div>
+                        <a href="https://deepdivedata.blnga.co.zw" target="_blank" class="text-decoration-none">deepdivedata.blnga.co.zw</a>
+                    </div>
+                </div>
+                <div class="receipt-date" id="currentDate"></div>
+            </div>
+            <div class="row mb-4 no-print">
+                <div class="col-md-6 offset-md-3">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="salaryToggle">
+                        <label class="form-check-label" for="salaryToggle">Toggle Monthly/Annual Salary</label>
+                    </div>
+                    <label for="salarySlider" class="form-label">Select Your <span id="salaryPeriod">Annual</span> Salary</label>
+                    <input type="range" class="form-range" min="0" max="108000" value="10100" id="salarySlider">
+                    <div class="text-center mt-2">
+                        <span id="salaryPeriodDisplay">Annual</span> Salary: $<span id="salaryDisplay">32,000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="department-row highlight-row">
+                    <div class="department-name"><i class="fas fa-money-bill-wave department-icon"></i>Annual Salary:</div>
+                    <div class="department-amount" id="salaryAmount">$32,000</div>
+                </div>
+                <div class="department-row highlight-row">
+                    <div class="department-name"><i class="fas fa-hand-holding-usd department-icon"></i>Total Tax Amount:</div>
+                    <div class="department-amount" id="taxAmount">$0</div>
+                </div>
+                <div class="department-row highlight-row">
+                    <div class="department-name"><i class="fas fa-ribbon department-icon"></i>AIDS Levy (3%):</div>
+                    <div class="department-amount" id="aidsLevyAmount">$0</div>
+                </div>
+            </div>
+            <div id="departmentsGrid">
+                <!-- Departments will be dynamically inserted here -->
+            </div>
+            <div class="department-row total-row">
+                <div class="department-name"><i class="fas fa-calculator department-icon"></i>Total Tax (incl. AIDS Levy):</div>
+                <div class="department-amount" id="totalTax">$0</div>
+            </div>
+            <div class="mt-4 text-center no-print">
+                <button class="btn btn-primary me-2" onclick="generatePDF()">Print Receipt</button>
+                
+            </div>
+            <div class="chart">
+                <h3>Tax Distribution Visualization</h3>
+                <div id="chartContainer">
+                    <!-- Chart bars will be dynamically inserted here -->
+                </div>
+            </div>
+            <div class="mt-4 text-center no-print">
+                <button class="btn btn-primary me-2" onclick="generatePDF()">Print Receipt</button>
+                
+            </div>
+            <div class="scroll-indicator" aria-hidden="true">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const departments = [
+            { name: 'Primary and Secondary Education', percentage: 18.09958264, icon: 'fa-graduation-cap' },
+            { name: 'Health and Child Care', percentage: 14.34132844, icon: 'fa-hospital' },
+            { name: 'Lands, Agriculture, Fisheries, Water and Rural Resettlement', percentage: 9.73812004, icon: 'fa-tractor' },
+            { name: 'Home Affairs and Cultural Heritage', percentage: 8.933680963, icon: 'fa-landmark' },
+            { name: 'Defence', percentage: 8.265117262, icon: 'fa-shield-alt' },
+            { name: 'Public Service, Labour and Social Welfare', percentage: 5.387273696, icon: 'fa-users' },
+            { name: 'Higher & Tertiary Education, Science and Technology Development', percentage: 5.351686313, icon: 'fa-university' },
+            { name: 'Office of the President and Cabinet', percentage: 4.901032973, icon: 'fa-flag' },
+            { name: 'Finance, Economic Development and Investment Promotion', percentage: 3.87328611, icon: 'fa-chart-line' },
+            { name: 'Public Service Commission', percentage: 3.244791102, icon: 'fa-clipboard-list' },
+            { name: 'Local Government and Public Works', percentage: 2.772285863, icon: 'fa-city' },
+            { name: 'Transport and Infrastructural Development', percentage: 2.620275015, icon: 'fa-road' },
+            { name: 'Justice, Legal and Parliamentary Affairs', percentage: 2.449380533, icon: 'fa-balance-scale' },
+            { name: 'Foreign Affairs and International Trade', percentage: 2.217590341, icon: 'fa-globe' },
+            { name: 'Parliament of Zimbabwe', percentage: 1.07950866, icon: 'fa-landmark' },
+            { name: 'National Housing and Social Amenities', percentage: 0.802011281, icon: 'fa-home' },
+            { name: 'Judicial Services Commission', percentage: 0.622639299, icon: 'fa-gavel' },
+            { name: 'Veterans of the Liberations Struggle Affairs', percentage: 0.503926569, icon: 'fa-medal' },
+            { name: 'Youth Empowerment, Development and Vocational Training', percentage: 0.477614401, icon: 'fa-child' },
+            { name: 'Women Affairs, Community, Small and Medium Enterprises Development', percentage: 0.42746762, icon: 'fa-female' },
+            { name: 'Information Communication Technology and Courier Services', percentage: 0.420978264, icon: 'fa-laptop' },
+            { name: 'Sport, Arts and Recreation', percentage: 0.30953686, icon: 'fa-futbol' },
+            { name: 'Environment, Climate and Wildlife', percentage: 0.307818507, icon: 'fa-leaf' },
+            { name: 'Mines & Mining Development', percentage: 0.301528188, icon: 'fa-hard-hat' },
+            { name: 'Industry and Commerce', percentage: 0.296451495, icon: 'fa-industry' },
+            { name: 'Information, Publicity and Broadcasting Services', percentage: 0.27801583, icon: 'fa-tv' },
+            { name: 'Audit Office', percentage: 0.265757537, icon: 'fa-file-invoice' },
+            { name: 'Zimbabwe Electoral Commission', percentage: 0.264929534, icon: 'fa-vote-yea' },
+            { name: 'National Prosecuting Authority', percentage: 0.22328645, icon: 'fa-legal' },
+            { name: 'Energy and Power Development', percentage: 0.204678172, icon: 'fa-bolt' },
+            { name: 'Tourism & Hospitality Industry', percentage: 0.161483054, icon: 'fa-umbrella-beach' },
+            { name: 'Zimbabwe Anti-Corruption Commission', percentage: 0.135514361, icon: 'fa-ban' },
+            { name: 'National Peace and Reconciliation Commission', percentage: 0.127255598, icon: 'fa-dove' },
+            { name: 'Zimbabwe Land Commission', percentage: 0.120280692, icon: 'fa-map' },
+            { name: 'Zimbabwe Gender Commission', percentage: 0.110277084, icon: 'fa-venus-mars' },
+            { name: 'Skills Audit and Development', percentage: 0.097803508, icon: 'fa-clipboard-check' },
+            { name: 'Human Rights Commission', percentage: 0.09569626, icon: 'fa-hands-helping' },
+            { name: 'National Council of Chiefs', percentage: 0.090745738, icon: 'fa-users' },
+            { name: 'Zimbabwe Media Commission', percentage: 0.079363753, icon: 'fa-newspaper' }
+        ];
+
+        const slider = document.getElementById('salarySlider');
+        const salaryToggle = document.getElementById('salaryToggle');
+        const salaryPeriod = document.getElementById('salaryPeriod');
+        const salaryPeriodDisplay = document.getElementById('salaryPeriodDisplay');
+        const salaryDisplay = document.getElementById('salaryDisplay');
+        const salaryAmount = document.getElementById('salaryAmount');
+        const taxAmount = document.getElementById('taxAmount');
+        const aidsLevyAmount = document.getElementById('aidsLevyAmount');
+        const totalTax = document.getElementById('totalTax');
+        const departmentsGrid = document.getElementById('departmentsGrid');
+        const chartContainer = document.getElementById('chartContainer');
+        const currentDate = document.getElementById('currentDate');
+
+        let isAnnual = true;
+
+        function calculateTax(salary) {
+            const monthlyIncome = salary / 12;
+            let annualTax = 0;
+
+            if (monthlyIncome <= 1200) {
+                annualTax = 0;
+            } else if (monthlyIncome <= 3600) {
+                annualTax = (monthlyIncome * 0.2 - 240) * 12;
+            } else if (monthlyIncome <= 12000) {
+                annualTax = (monthlyIncome * 0.25 - 420) * 12;
+            } else if (monthlyIncome <= 24000) {
+                annualTax = (monthlyIncome * 0.3 - 1020) * 12;
+            } else if (monthlyIncome <= 36000) {
+                annualTax = (monthlyIncome * 0.35 - 2220) * 12;
+            } else {
+                annualTax = (monthlyIncome * 0.4 - 4020) * 12;
+            }
+
+            return Math.max(annualTax, 0);
+        }
+
+        function updateCalculations() {
+            const salary = parseFloat(slider.value);
+            const annualSalary = isAnnual ? salary : salary * 12;
+            const tax = calculateTax(annualSalary);
+            const aidsLevy = tax * 0.03;
+            const totalTaxAmount = tax + aidsLevy;
+
+            salaryDisplay.textContent = salary.toLocaleString();
+            salaryAmount.textContent = `$${annualSalary.toLocaleString()}`;
+            taxAmount.textContent = `$${(isAnnual ? tax : tax / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+            aidsLevyAmount.textContent = `$${(isAnnual ? aidsLevy : aidsLevy / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+            totalTax.textContent = `$${(isAnnual ? totalTaxAmount : totalTaxAmount / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+
+            departments.forEach((dept, index) => {
+                const departmentAmount = (tax * dept.percentage) / 100;
+                const amountElement = document.getElementById(`amount-${index}`);
+                if (amountElement) {
+                    amountElement.textContent = `$${(isAnnual ? departmentAmount : departmentAmount / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+                }
+                updateChartBar(index, departmentAmount, tax);
+            });
+        }
+
+        function createDepartmentElements() {
+            departments.forEach((dept, index) => {
+                const deptElement = document.createElement('div');
+                deptElement.className = 'department-row';
+                deptElement.innerHTML = `
+                    <div class="department-name">
+                        <i class="fas ${dept.icon} department-icon" aria-hidden="true"></i>
+                        ${dept.name}
+                    </div>
+                    <div class="department-percentage">${dept.percentage.toFixed(2)}%</div>
+                    <div class="department-amount" id="amount-${index}">$0.00</div>
+                `;
+                departmentsGrid.appendChild(deptElement);
+
+                const chartBarElement = document.createElement('div');
+                chartBarElement.innerHTML = `
+                    <div class="chart-label">
+                        <span>${dept.name}</span>
+                        <span>${dept.percentage.toFixed(2)}%</span>
+                    </div>
+                    <div class="chart-bar ${index < 5 ? 'top-departments' : ''}" id="bar-${index}" style="width: 0%;"></div>
+                `;
+                chartContainer.appendChild(chartBarElement);
+            });
+        }
+
+        function updateChartBar(index, amount, total) {
+            const percentage = (amount / total) * 100;
+            const barElement = document.getElementById(`bar-${index}`);
+            barElement.style.width = `${percentage}%`;
+        }
+
+        function setCurrentDate() {
+            const now = new Date();
+            currentDate.textContent = now.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function toggleSalaryPeriod() {
+            isAnnual = !isAnnual;
+            salaryPeriod.textContent = isAnnual ? 'Annual' : 'Monthly';
+            salaryPeriodDisplay.textContent = isAnnual ? 'Annual' : 'Monthly';
+            slider.max = isAnnual ? '432000' : '36000';
+            slider.value = isAnnual ? slider.value * 12 : slider.value / 12;
+            updateCalculations();
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('receipt');
+            const opt = {
+                margin: 10,
+                filename: 'tax_receipt.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, scrollY: 0, windowWidth: element.scrollWidth },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Hide the no-print elements before generating PDF
+            const noPrintElements = element.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.display = 'none');
+
+            // Remove max-height temporarily
+            const originalStyle = element.style.cssText;
+            element.style.maxHeight = 'none';
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Show the no-print elements after generating PDF
+                noPrintElements.forEach(el => el.style.display = '');
+                // Restore original style
+                element.style.cssText = originalStyle;
+            });
+        }
+
+        createDepartmentElements();
+        updateCalculations();
+        setCurrentDate();
+
+        slider.addEventListener('input', updateCalculations);
+        salaryToggle.addEventListener('change', toggleSalaryPeriod);
+    </script>
+</body>
+</html>
