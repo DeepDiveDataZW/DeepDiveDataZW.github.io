@@ -206,22 +206,22 @@
             </div>
             <div class="row mb-4 no-print">
                 <div class="col-md-6 offset-md-3">
-                    <div class="form-check form-switch mb-3">
+                    <!--<div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" id="salaryToggle">
                         <label class="form-check-label" for="salaryToggle">Toggle Monthly/Annual Salary</label>
-                    </div>
-                    <label for="salarySlider" class="form-label">Select Your <span id="salaryPeriod">Annual</span> Salary</label>
-                    <input type="range" class="form-range" min="0" max="108000" value="10100" id="salarySlider">
+                    </div>-->
+                    <label for="salarySlider" class="form-label">Select Your <span id="salaryPeriod">Monthly</span> Salary</label>
+                    <input type="range" class="form-range" min="0" max="3000" value="150" id="salarySlider">
                     <div class="text-center mt-2">
                         <span id="salaryPeriodDisplay">Annual</span> Salary: $<span id="salaryDisplay">32,000</span>
                     </div>
                 </div>
             </div>
             <div class="mb-4">
-                <div class="department-row highlight-row">
-                    <div class="department-name"><i class="fas fa-money-bill-wave department-icon"></i>Annual Salary:</div>
-                    <div class="department-amount" id="salaryAmount">$32,000</div>
-                </div>
+                <!--<div class="department-row highlight-row">
+                    !--<div class="department-name"><i class="fas fa-money-bill-wave department-icon"></i>Annual Salary:</div>--
+                    !--<div class="department-amount" id="salaryAmount">$32,000</div>--
+                </div>-->
                 <div class="department-row highlight-row">
                     <div class="department-name"><i class="fas fa-hand-holding-usd department-icon"></i>Total Tax Amount:</div>
                     <div class="department-amount" id="taxAmount">$0</div>
@@ -316,49 +316,52 @@
 
         let isAnnual = true;
 
-        function calculateTax(salary) {
-            const monthlyIncome = salary / 12;
-            let annualTax = 0;
+function calculateTax(monthlyIncome) {
+    let monthlyTax = 0;
 
-            if (monthlyIncome <= 1200) {
-                annualTax = 0;
-            } else if (monthlyIncome <= 3600) {
-                annualTax = (monthlyIncome * 0.2 - 240) * 12;
-            } else if (monthlyIncome <= 12000) {
-                annualTax = (monthlyIncome * 0.25 - 420) * 12;
-            } else if (monthlyIncome <= 24000) {
-                annualTax = (monthlyIncome * 0.3 - 1020) * 12;
-            } else if (monthlyIncome <= 36000) {
-                annualTax = (monthlyIncome * 0.35 - 2220) * 12;
-            } else {
-                annualTax = (monthlyIncome * 0.4 - 4020) * 12;
-            }
+    // Calculate tax based on monthly income
+    if (monthlyIncome <= 100.00) {
+        monthlyTax = 0;
+    } else if (monthlyIncome <= 300.00) {
+        monthlyTax = monthlyIncome * 0.2 - 20.00;
+    } else if (monthlyIncome <= 1000.00) {
+        monthlyTax = monthlyIncome * 0.25 - 35.00;
+    } else if (monthlyIncome <= 2000.00) {
+        monthlyTax = monthlyIncome * 0.3 - 85.00;
+    } else if (monthlyIncome <= 3000.00) {
+        monthlyTax = monthlyIncome * 0.35 - 185.00;
+    } else {
+        monthlyTax = monthlyIncome * 0.4 - 335.00;
+    }
 
-            return Math.max(annualTax, 0);
+    // Ensure tax is non-negative
+    return Math.max(monthlyTax, 0);
+}
+
+function updateCalculations() {
+    const salary = parseFloat(slider.value); // Monthly salary input
+    const tax = calculateTax(salary); // Calculate monthly tax
+    const aidsLevy = tax * 0.03; // Calculate aids levy as 3% of the tax
+    const totalTaxAmount = tax + aidsLevy; // Total tax amount
+
+    // Update display elements with formatted values
+    salaryDisplay.textContent = salary.toLocaleString();
+    taxAmount.textContent = `$${tax.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+    aidsLevyAmount.textContent = `$${aidsLevy.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+    totalTax.textContent = `$${totalTaxAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+
+    // Update department distributions
+    departments.forEach((dept, index) => {
+        const departmentAmount = (tax * dept.percentage) / 100;
+        const amountElement = document.getElementById(`amount-${index}`);
+        if (amountElement) {
+            amountElement.textContent = `$${departmentAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
         }
+        updateChartBar(index, departmentAmount, tax); // Update the chart
+    });
+}
 
-        function updateCalculations() {
-            const salary = parseFloat(slider.value);
-            const annualSalary = isAnnual ? salary : salary * 12;
-            const tax = calculateTax(annualSalary);
-            const aidsLevy = tax * 0.03;
-            const totalTaxAmount = tax + aidsLevy;
 
-            salaryDisplay.textContent = salary.toLocaleString();
-            salaryAmount.textContent = `$${annualSalary.toLocaleString()}`;
-            taxAmount.textContent = `$${(isAnnual ? tax : tax / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-            aidsLevyAmount.textContent = `$${(isAnnual ? aidsLevy : aidsLevy / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-            totalTax.textContent = `$${(isAnnual ? totalTaxAmount : totalTaxAmount / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-
-            departments.forEach((dept, index) => {
-                const departmentAmount = (tax * dept.percentage) / 100;
-                const amountElement = document.getElementById(`amount-${index}`);
-                if (amountElement) {
-                    amountElement.textContent = `$${(isAnnual ? departmentAmount : departmentAmount / 12).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-                }
-                updateChartBar(index, departmentAmount, tax);
-            });
-        }
 
         function createDepartmentElements() {
             departments.forEach((dept, index) => {
