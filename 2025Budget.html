@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Zimbabwe Ministry and Department Budget Allocation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .budget-card {
+            height: 100%;
+        }
+        .budget-icon {
+            font-size: 2rem;
+        }
+        .budget-bar {
+            height: 10px;
+            background-color: #e9ecef;
+        }
+        .budget-bar-fill {
+            height: 100%;
+            background-color: #007bff;
+        }
+        .logo {
+            max-height: 50px;
+            width: auto;
+        }
+        .receipt-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .receipt-date {
+            text-align: center;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .receipt-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .logo {
+                margin-bottom: 10px;
+            }
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+    </style>
+            <style>
+.chart-container {
+    height: 400px;
+    max-height: 600px;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 300px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="receipt-header">
+            <div class="d-flex align-items-center justify-content-center mb-3 flex-wrap">
+                <img src="img/1.png" alt="Deep Dive Data Logo" class="logo me-3 mb-2 mb-md-0">
+                <div>
+                    <div class="receipt-title">2025 Zimbabwe Ministry and Department Budget Allocation</div>
+                    <a href="https://deepdivedata.blnga.co.zw" target="_blank" class="text-decoration-none">deepdivedata.blnga.co.zw</a>
+                </div>
+            </div>
+            <div class="receipt-date" id="currentDate"></div>
+        </div>
+
+        <h1 class="text-center mb-5">Ministry and  Department Budget Allocation</h1>
+        
+        <div class="row mb-5">
+            <div class="col-12 chart-container">
+                <canvas id="budgetChart"></canvas>
+            </div>
+        </div>
+
+        <div class="row" id="budgetCards"></div>
+    </div>
+
+    <script>
+        const departments = [
+            { name: 'Primary and Secondary Education', percentage:{current: 21.42986129,previous : 18.09958264}, icon: 'fa-graduation-cap' },
+            { name: 'Health and Child Care', percentage:{current: 13.01451219,previous : 14.34132844}, icon: 'fa-hospital' },
+            { name: 'Lands, Agriculture, Fisheries, Water and Rural Resettlement', percentage:{current: 10.53848511,previous :  9.73812004}, icon: 'fa-tractor' },
+            { name: 'Home Affairs and Cultural Heritage', percentage:{current: 7.436168301,previous : 8.933680963}, icon: 'fa-landmark' },
+            { name: 'Defence', percentage:{current: 8.294594196,previous : 8.265117262}, icon: 'fa-shield-alt' },
+            
+            { name: 'Public Service, Labour and Social Welfare', percentage:{current: 4.921405922,previous : 5.387273696}, icon: 'fa-users' },
+
+            { name: 'Higher & Tertiary Education, Science and Technology Development', percentage:{current: 4.743719757,previous : 5.351686313}, icon: 'fa-university' },
+
+            { name: 'Office of the President and Cabinet', percentage:{current: 4.85574429,previous : 4.901032973}, icon: 'fa-flag' },
+
+            { name: 'Finance, Economic Development and Investment Promotion', percentage:{current: 4.21939164,previous :  3.87328611}, icon: 'fa-chart-line' },
+
+            { name: 'Public Service Commission', percentage:{current: 4.927609085,previous : 3.244791102}, icon: 'fa-clipboard-list' },
+
+
+            { name: 'Local Government and Public Works', percentage:{current: 2.255102561,previous : 2.772285863}, icon: 'fa-city' },
+            { name: 'Transport and Infrastructural Development', percentage:{current: 2.501299218,previous : 2.620275015}, icon: 'fa-road' },
+            { name: 'Justice, Legal and Parliamentary Affairs', percentage:{current: 2.593795274,previous : 2.449380533}, icon: 'fa-balance-scale' },
+            { name: 'Foreign Affairs and International Trade', percentage:{current: 1.833287461,previous : 2.217590341}, icon: 'fa-globe' },
+
+            { name: 'Parliament of Zimbabwe', percentage:{current: 0.805676032,previous :  1.07950866}, icon: 'fa-landmark' },
+
+            { name: 'National Housing and Social Amenities', percentage:{current: 0.319899426,previous : 0.802011281}, icon: 'fa-home' },
+            { name: 'Judicial Services Commission', percentage:{current: 0.590265445,previous : 0.622639299}, icon: 'fa-gavel' },
+
+
+            { name: 'Veterans of the Liberations Struggle Affairs', percentage:{current: 0.370949162,previous : 0.503926569}, icon: 'fa-medal' },
+            { name: 'Youth Empowerment, Development and Vocational Training', percentage:{current: 0.467948256,previous : 0.477614401}, icon: 'fa-child' },
+
+            { name: 'Women Affairs, Community, Small and Medium Enterprises Development', percentage:{current: 0.467167116,previous :  0.42746762}, icon: 'fa-female' },
+
+            { name: 'Information Communication Technology and Courier Services', percentage:{current: 0.294719178,previous : 0.420978264}, icon: 'fa-laptop' },
+            { name: 'Sport, Arts and Recreation', percentage:{current: 0.408214091,previous :  0.30953686}, icon: 'fa-futbol' },
+            { name: 'Environment, Climate and Wildlife', percentage:{current: 0.237466279,previous : 0.307818507}, icon: 'fa-leaf' },
+
+            { name: 'Mines & Mining Development', percentage:{current: 0.305471328,previous : 0.301528188}, icon: 'fa-hard-hat' },
+            { name: 'Industry and Commerce', percentage:{current: 0.25313501,previous : 0.296451495}, icon: 'fa-industry' },
+            { name: 'Information, Publicity and Broadcasting Services', percentage:{current: 0.199006667,previous :  0.27801583}, icon: 'fa-tv' },
+            { name: 'Audit Office', percentage:{current: 0.270733614,previous : 0.265757537}, icon: 'fa-file-invoice' },
+            { name: 'Zimbabwe Electoral Commission', percentage:{current: 0.214767296,previous : 0.264929534}, icon: 'fa-vote-yea' },
+
+            { name: 'National Prosecuting Authority', percentage:{current: 0.211596791,previous :  0.22328645}, icon: 'fa-legal' },
+
+            { name: 'Energy and Power Development', percentage:{current: 0.11937643,previous : 0.204678172}, icon: 'fa-bolt' },
+            { name: 'Tourism & Hospitality Industry', percentage:{current: 0.135366807,previous : 0.161483054}, icon: 'fa-umbrella-beach' },
+            { name: 'Zimbabwe Anti-Corruption Commission', percentage:{current: 0.108532382,previous : 0.135514361}, icon: 'fa-ban' },
+            { name: 'National Peace and Reconciliation Commission', percentage:{current: 0.176123887,previous : 0.127255598}, icon: 'fa-dove' },
+
+            { name: 'Zimbabwe Land Commission', percentage:{current: 0.089233652,previous : 0.120280692}, icon: 'fa-map' },
+            { name: 'Zimbabwe Gender Commission', percentage:{current: 0.081468211,previous : 0.110277084}, icon: 'fa-venus-mars' },
+            { name: 'Skills Audit and Development', percentage:{current: 0.070394415,previous : 0.097803508}, icon: 'fa-clipboard-check' },
+            { name: 'Human Rights Commission', percentage:{current: 0.081008717,previous :  0.09569626}, icon: 'fa-hands-helping' },
+            { name: 'National Council of Chiefs', percentage:{current: 0.090244538,previous : 0.090745738}, icon: 'fa-users' },
+            { name: 'Zimbabwe Media Commission', percentage:{current: 0.066258973,previous : 0.079363753}, icon: 'fa-newspaper' }
+        ];
+
+        // Sort departments by current percentage
+        departments.sort((a, b) => b.percentage.current - a.percentage.current);
+
+        // Create budget cards
+        const budgetCardsContainer = document.getElementById('budgetCards');
+        departments.forEach(dept => {
+            const percentageDiff = dept.percentage.current - dept.percentage.previous;
+            const percentageChange = (percentageDiff / dept.percentage.previous) * 100;
+            //const percentageChange = (percentageDiff / dept.percentage.previous) * 100;
+            
+            const card = document.createElement('div');
+            card.className = 'col-md-3 mb-4';
+            card.innerHTML = `
+                <div class="card budget-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <i class="fas ${dept.icon} budget-icon text-primary"></i>
+                            <span class="fw-bold">${dept.percentage.current.toFixed(2)}%</span>
+                        </div>
+                        <h5 class="card-title">${dept.name}</h5>
+                        <div class="budget-bar mt-2">
+                            <div class="budget-bar-fill" style="width: ${dept.percentage.current}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="${percentageDiff >= 0 ? 'text-success' : 'text-danger'}">
+                                <i class="fas fa-${percentageDiff >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                                ${Math.abs(percentageChange).toFixed(2)}%
+                            </span>
+                            <small class="text-muted">vs previous</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            budgetCardsContainer.appendChild(card);
+        });
+// Create bar chart
+const ctx = document.getElementById('budgetChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: departments.slice(0, 10).map(dept => dept.name),
+        datasets: [{
+            label: 'Current Budget (%)',
+            data: departments.slice(0, 10).map(dept => dept.percentage.current),
+            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 1
+        }, {
+            label: 'Previous Budget (%)',
+            data: departments.slice(0, 10).map(dept => dept.percentage.previous),
+            backgroundColor: 'rgba(108, 117, 125, 0.5)',
+            borderColor: 'rgba(108, 117, 125, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    callback: function(value, index, values) {
+                        return this.getLabelForValue(value).split(' ').slice(0, 3).join(' ');
+                    }
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Budget Percentage'
+                },
+                max: 30 // Set the maximum value for y-axis
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Top 10 Department Budget Allocations'
+            }
+        },
+        barThickness: 'flex',
+        maxBarThickness: 50,
+        barPercentage: 0.9,
+        categoryPercentage: 0.8
+    }
+});
+
+        // Set current date
+        const currentDate = new Date();
+        document.getElementById('currentDate').textContent = currentDate.toLocaleDateString('en-ZW', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    </script>
+</body>
+</html>
