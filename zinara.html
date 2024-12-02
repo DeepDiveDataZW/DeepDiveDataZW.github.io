@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Dive Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRPV64YPR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GVRPV64YPR');
+    </script>
+    <style>
+        :root {
+            --primary-color: #e43f5a;
+            --secondary-color: #ff8c7a;
+            --bg-dark: #1a1a2e;
+            --bg-light: #1b1b2f;
+            --bg-contrast: #162447;
+            --bg-lighter: #1e2a4a;
+            --text-color: #e0e0e0;
+            --text-muted: #bfbfbf;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            background-color: var(--bg-light);
+        }
+        .navbar-brand, .nav-link {
+            color: var(--text-muted) !important;
+        }
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        .search-section {
+            background-color: var(--bg-light);
+            padding: 80px 0;
+            text-align: center;
+        }
+        .search-bar {
+            max-width: 600px;
+            margin: 20px auto 0;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        .result-card {
+            background-color: var(--bg-contrast);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        footer {
+            background-color: var(--bg-light);
+            color: var(--text-muted);
+            padding: 20px 0;
+        }
+        footer a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a href="index.html" class="navbar-brand d-flex align-items-center">
+                <img src="img/1.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+                Deep Dive Data
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="blog.html">Explore Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="search-section">
+        <div class="container">
+            <img src="intro2.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 400px;">
+            <div class="search-bar">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter registration number..." aria-label="Enter registration number" id="searchInput">
+                    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                </div>
+            </div>
+            <div class="result-card" id="resultCard">
+                <h3>Search Results</h3>
+                <p id="resultText"></p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center mt-5">
+        <div class="container">
+            <p>&copy; 2024 Deep Dive Data </p>
+            <div class="mt-3">
+                <a href="https://x.com/DeepDiveDataZW" class="me-3"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/company/deepdivedatazw/" class="me-3"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let registrationData = [];
+
+        // Fetch the JSON data
+        fetch('registration_data.json')
+            .then(response => response.json())
+            .then(data => {
+                registrationData = data;
+            })
+            .catch(error => console.error('Error loading registration data:', error));
+
+        function calculateFees(expiryDateString) {
+            const today = new Date();
+            const expiryDate = new Date(expiryDateString.replace(/−/g, '-'));
+            
+            // Calculate the difference in months
+            let months = (today.getFullYear() - expiryDate.getFullYear()) * 12;
+            months += today.getMonth() - expiryDate.getMonth();
+            
+            // If the day of the month is less than the expiry day, subtract one month
+            if (today.getDate() < expiryDate.getDate()) {
+                months--;
+            }
+            
+            // Calculate the number of terms (4 months per term)
+            const terms = Math.ceil(months / 4);
+            
+            // Calculate the fees ($40 per term)
+            const fees = terms * 40;
+            
+            return { terms, fees };
+        }
+
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchInput = document.getElementById('searchInput').value.toUpperCase();
+            const resultCard = document.getElementById('resultCard');
+            const resultText = document.getElementById('resultText');
+
+            const matchedRegistration = registrationData.find(item => item.REGISTRATION_NUMBER === searchInput);
+
+            if (matchedRegistration) {
+                const { terms, fees } = calculateFees(matchedRegistration.EXPIRY_DATE);
+                resultText.innerHTML = `
+                    Registration Number: ${matchedRegistration.REGISTRATION_NUMBER}<br>
+                    Expiry Date: ${matchedRegistration.EXPIRY_DATE}<br>
+                    Terms Overdue: ${terms}<br>
+                    Fees Owing: $${fees}
+                `;
+            } else {
+                resultText.textContent = 'No matching registration number found.';
+            }
+
+            resultCard.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
