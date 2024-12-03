@@ -153,7 +153,73 @@
             justify-content: center;
             margin: 20px 0;
         }
+        .search-section {
+            background-color: var(--bg-contrast);
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .result-card {
+            background-color: var(--bg-lighter);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none; /* Initially hidden */
+        }
+
+        .result-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        #resultText {
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+
+        .form-control {
+            background-color: var(--bg-lighter);
+            border: 1px solid var(--text-muted);
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            background-color: var(--bg-lighter);
+            border-color: var(--primary-color);
+            color: var(--text-color);
+            box-shadow: 0 0 0 0.25rem rgba(228, 63, 90, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
   
+        .btn .spinner-border {
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+        .spinner-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner-container .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
     </style>
 </head>
 <body>
@@ -180,51 +246,39 @@
 
     <section class="hero-section">
         <div class="container">
-            <img src="intro.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 800px;">
             <h1>
                 Data, Beautifully Presented
             </h1>
+            <img src="intro.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 800px;">
+          
             <p class="lead  mb-4" style="color: #e0e0e0;">Complex Data, Simple Explanations</p>
             <!--<button class="btn btn-primary btn-lg">Get Started</button>-->
         </div>
     </section>
-
-    <section class="chart-section">
-        <div class="container-fluid">
-            <h2 class="text-center section-title">Featured:Shifting Priorities in Lending</h2>
-            <h3 class="text-center mb-4">How Each Bank Allocates Funds Across Categories</h3>
-
-            
-            <div class="d-flex justify-content-center mb-4">
-                <div class="btn-group" role="group" aria-label="Dataset selection">
-                    <input type="radio" class="btn-check" name="dataset" id="dataset1" value="dataset1" checked>
-                    <label class="btn btn-outline-primary" for="dataset1">National View</label>
-
-                    <input type="radio" class="btn-check" name="dataset" id="dataset2" value="dataset2">
-                    <label class="btn btn-outline-primary" for="dataset2">Bank 1 View</label>
+    <section class="search-section">
+        <div class="container">
+            <h2 class="text-center section-title">
+                Zinara Vehcile De-registration checker
+            </h2>
+            <img src="intro2.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 400px;">
+            <div id="searchSpinner" class="spinner-container mb-3 d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <div id="bump-chart" class="chart-image-container" style="width: 100%; max-width: 1200px; margin: 0 auto;"></div>
-            <div id="tooltip" class="tooltip"></div>
-
-             <div class="d-flex justify-content-center mb-4">
-                
+            <div class="search-bar">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter registration number..." aria-label="Enter registration number" id="searchInput">
+                    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                </div>
             </div>
-         
-            <h2 class="text-center section-title">
-                <p class="chart-description text-center">
-                   Want to delve deeper into the specific loan categories and their impact on each bank's performance?
-                </p>
-            </h2>
-            <h2 class="text-center section-title">
-                <!--<button class="btn btn-primary btn-lg">Learn More</button>-->
-                <a href="articles/Shifting Priorities in Lending.html" class="btn btn-primary btn-lg">Explore Chart</a>
-
-                
-            </h2>
-            
+            <div class="result-card" id="resultCard">
+                <h3>Search Results</h3>
+                <p id="resultText"></p>
+            </div>
         </div>
     </section>
+
 
     <section class="explore-section">
     <div class="container">
@@ -234,28 +288,33 @@
                 <div class="col">
                     <div class="card chart-card h-100">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" style="color: #e0e0e0;">Exploring Zimbabwe's Religious Mosaic</h5>
+                            <h5 class="card-title" style="color: #e0e0e0;">
+                                Zimbabwe 2025 Budget Review
+                            </h5>
                             <div class="post-img">
-                                <img src="img/Zimbabwe Religious 2.png" alt="Zimbabwe Religious Mosaic" class="img-fluid">
+                                <img src="img/budget.png" alt="Zimbabwe Religious Mosaic" class="img-fluid">
                             </div>
                             <p class="card-text flex-grow-1" style="color: #e0e0e0;">
-                                A Province-by-Province Exploration of Religious Diversity.
+                                A quick look at the 2025 Budget allocations : Zimbabwe
+
                             </p>
-                            <a href="articles/Zimbabwe-Religious-Mosaic.html" class="btn btn-primary mt-3">Explore Chart</a>
+                            <a href="2025Budget.html" class="btn btn-primary mt-3">Explore Chart</a>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="card chart-card h-100">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" style="color: #e0e0e0;">Interactive $130 Budget Planner</h5>
+                            <h5 class="card-title" style="color: #e0e0e0;">
+                                Where Does Your PAYE Tax Go?
+                            </h5>
                             <div class="post-img">
-                                <img src="img/Budget Planner.png" alt="Budget Planner" class="img-fluid">
+                                <img src="img/PayeTax.png" alt="Budget Planner" class="img-fluid">
                             </div>
                             <p class="card-text flex-grow-1" style="color: #e0e0e0;">
-                                Budgeting on a shoestring: A tool for Zimbabweans perspective.
+                                You pay PAYE as one lump sum. Our tool shows exactly where it goes.
                             </p>
-                            <a href="articles/$130 Budget Planner.html" class="btn btn-primary mt-3">Explore Chart</a>
+                            <a href="taxCalculator.html" class="btn btn-primary mt-3">Explore Chart</a>
                         </div>
                     </div>
                 </div>
@@ -516,5 +575,97 @@
             alert('Opening chart for ' + dataset);
         }
     </script>
+    
+    <script>
+        let registrationData = [];
+ 
+ // Fetch data from the backend API instead of the local JSON file
+ function fetchRegistrationData(registrationNumber) {
+     return fetch(`https://tdccheck.onrender.com/search-vehicle?registration_number=${registrationNumber}`)
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error('Vehicle not found');
+             }
+             return response.json();
+         })
+         .catch(error => {
+             console.error('Error fetching registration data:', error);
+             return null; // In case of an error (e.g., vehicle not found)
+         });
+ }
+ 
+ function calculateFees(expiryDateString) {
+     const today = new Date();
+     const expiryDate = new Date(expiryDateString.replace(/−/g, '-'));
+ 
+     // Calculate the difference in months
+     let months = (today.getFullYear() - expiryDate.getFullYear()) * 12;
+     months += today.getMonth() - expiryDate.getMonth();
+ 
+     // If the day of the month is less than the expiry day, subtract one month
+     if (today.getDate() < expiryDate.getDate()) {
+         months--;
+     }
+ 
+     // Calculate the number of terms (4 months per term)
+     const terms = Math.ceil(months / 4);
+ 
+     // Calculate the fees ($40 per term)
+     const fees = terms * 40;
+ 
+     return { terms, fees, expiryDate };
+ }
+ 
+ // Function to format the expiry date
+ function formatExpiryDate(expiryDate) {
+     const date = new Date(expiryDate);
+     const year = date.getFullYear();
+     const month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero for single digits
+     const day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single digits
+     return `${year}-${month}-${day}`;
+ }
+ 
+ document.getElementById('searchButton').addEventListener('click', async function() {
+     const searchInput = document.getElementById('searchInput').value.toUpperCase();
+     const resultCard = document.getElementById('resultCard');
+     const resultText = document.getElementById('resultText');
+     const searchButton = document.getElementById('searchButton');
+     const searchSpinner = document.getElementById('searchSpinner');
+
+     // Show spinner, disable button
+     searchButton.disabled = true;
+     searchSpinner.classList.remove('d-none');
+     resultCard.style.display = 'none';
+
+     try {
+         // Fetch vehicle data from the API
+         const matchedRegistration = await fetchRegistrationData(searchInput);
+         
+         if (matchedRegistration) {
+             const { terms, fees, expiryDate } = calculateFees(matchedRegistration.expiry_date);
+             const formattedExpiryDate = formatExpiryDate(expiryDate);
+
+             resultText.innerHTML = `
+                 Registration Number: ${matchedRegistration.registration_number}<br>
+                 Expiry Date: ${formattedExpiryDate}<br>
+                 Terms Overdue: ${terms}<br>
+                Estimated Fees Owing: $${fees}
+             `;
+         } else {
+             resultText.textContent = 'No matching registration number found.';
+         }
+
+         resultCard.style.display = 'block';
+     } catch (error) {
+         resultText.textContent = 'An error occurred while searching. Please try again.';
+         resultCard.style.display = 'block';
+     } finally {
+         // Hide spinner, enable button
+         searchButton.disabled = false;
+         searchSpinner.classList.add('d-none');
+     }
+ });
+ 
+     </script>
 </body>
 </html>
