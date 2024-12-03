@@ -127,50 +127,69 @@
     </footer>
 
     <script>
-        let registrationData = [];
+       let registrationData = [];
 
-        // Fetch the JSON data
-        fetch('registration_data.json')
-            .then(response => response.json())
-            .then(data => {
-                registrationData = data;
-            })
-            .catch(error => console.error('Error loading registration data:', error));
-
-        function calculateFees(expiryDateString) {
-            const today = new Date();
-            const expiryDate = new Date(expiryDateString.replace(/−/g, '-'));
-            
-            // Calculate the difference in months
-            let months = (today.getFullYear() - expiryDate.getFullYear()) * 12;
-            months += today.getMonth() - expiryDate.getMonth();
-            
-            // If the day of the month is less than the expiry day, subtract one month
-            if (today.getDate() < expiryDate.getDate()) {
-                months--;
+// Fetch data from the backend API instead of the local JSON file
+function fetchRegistrationData(registrationNumber) {
+    return fetch(`https://tdccheck.onrender.com/search-vehicle?registration_number=${registrationNumber}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Vehicle not found');
             }
-            
-            // Calculate the number of terms (4 months per term)
-            const terms = Math.ceil(months / 4);
-            
-            // Calculate the fees ($40 per term)
-            const fees = terms * 40;
-            
-            return { terms, fees };
-        }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetching registration data:', error);
+            return null; // In case of an error (e.g., vehicle not found)
+        });
+}
 
-        document.getElementById('searchButton').addEventListener('click', function() {
-            const searchInput = document.getElementById('searchInput').value.toUpperCase();
-            const resultCard = document.getElementById('resultCard');
-            const resultText = document.getElementById('resultText');
+function calculateFees(expiryDateString) {
+    const today = new Date();
+    const expiryDate = new Date(expiryDateString.replace(/−/g, '-'));
 
-            const matchedRegistration = registrationData.find(item => item.REGISTRATION_NUMBER === searchInput);
+    // Calculate the difference in months
+    let months = (today.getFullYear() - expiryDate.getFullYear()) * 12;
+    months += today.getMonth() - expiryDate.getMonth();
 
+    // If the day of the month is less than the expiry day, subtract one month
+    if (today.getDate() < expiryDate.getDate()) {
+        months--;
+    }
+
+    // Calculate the number of terms (4 months per term)
+    const terms = Math.ceil(months / 4);
+
+    // Calculate the fees ($40 per term)
+    const fees = terms * 40;
+
+    return { terms, fees, expiryDate };
+}
+
+// Function to format the expiry date
+function formatExpiryDate(expiryDate) {
+    const date = new Date(expiryDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero for single digits
+    const day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single digits
+    return `${year}-${month}-${day}`;
+}
+
+document.getElementById('searchButton').addEventListener('click', function() {
+    const searchInput = document.getElementById('searchInput').value.toUpperCase();
+    const resultCard = document.getElementById('resultCard');
+    const resultText = document.getElementById('resultText');
+
+    // Fetch vehicle data from the API
+    fetchRegistrationData(searchInput)
+        .then(matchedRegistration => {
             if (matchedRegistration) {
-                const { terms, fees } = calculateFees(matchedRegistration.EXPIRY_DATE);
+                const { terms, fees, expiryDate } = calculateFees(matchedRegistration.expiry_date);
+                const formattedExpiryDate = formatExpiryDate(expiryDate);
+
                 resultText.innerHTML = `
-                    Registration Number: ${matchedRegistration.REGISTRATION_NUMBER}<br>
-                    Expiry Date: ${matchedRegistration.EXPIRY_DATE}<br>
+                    Registration Number: ${matchedRegistration.registration_number}<br>
+                    Expiry Date: ${formattedExpiryDate}<br>
                     Terms Overdue: ${terms}<br>
                     Fees Owing: $${fees}
                 `;
@@ -180,6 +199,8 @@
 
             resultCard.style.display = 'block';
         });
+});
+
     </script>
 </body>
 </html>
