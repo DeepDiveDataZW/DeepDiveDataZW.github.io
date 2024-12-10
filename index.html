@@ -255,29 +255,38 @@
             <!--<button class="btn btn-primary btn-lg">Get Started</button>-->
         </div>
     </section>
-    <section class="search-section">
-        <div class="container">
-            <h2 class="text-center section-title">
-                Zinara Vehicle De-registration checker
-            </h2>
-            <img src="intro2.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 400px;">
-            <div id="searchSpinner" class="spinner-container mb-3 d-none">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-            <div class="search-bar">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Enter registration number..." aria-label="Enter registration number" id="searchInput">
-                    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
-                </div>
-            </div>
-            <div class="result-card" id="resultCard">
-                <h3>Search Results</h3>
-                <p id="resultText"></p>
+    
+<section class="search-section">
+    <div class="container">
+        <h2 class="text-center section-title">
+            Zinara Vehicle De-registration checker
+        </h2>
+        <img src="intro2.svg" alt="Deep Dive Data" class="img-fluid mb-4" style="max-width: 400px;">
+        <div id="searchSpinner" class="spinner-container mb-3 d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-    </section>
+        <div class="search-bar">
+            <div class="input-group mb-3">
+                
+                <input type="text" class="form-control" placeholder="Enter registration number..." aria-label="Enter registration number" id="searchInput">
+                <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+            </div>
+        </div>
+        <div class="result-card" id="resultCard">
+            <h3>Search Results</h3>
+            <p id="resultText"></p>
+        </div>
+    </div>
+</section>
+
+<section class="chart-section" id="premiums-chart-section" style="display: none;">
+    <div class="container">
+        <h2 class="text-center section-title">Insurance Premiums Over Time</h2>
+        <div id="premiums-chart"></div>
+    </div>
+</section>
 
 
     <section class="explore-section">
@@ -336,245 +345,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const dataset1 = [
-            { year: 2019, Agriculture: 31.69, Construction: 1.37, Communication: 0.26, Distribution: 10.84, Financial_Investiments: 0.47, Financial_Organizations: 14.62, Manufacturing: 9.99, Mining: 7.99, Services: 8.00, Transport: 0.82, Individuals: 13.88, Conglomerates: 0.07 },
-            { year: 2020, Agriculture: 26.94, Construction: 0.79, Communication: 0.38, Distribution: 14.19, Financial_Investiments: 0.04, Financial_Organizations: 13.35, Manufacturing: 11.60, Mining: 10.73, Services: 6.71, Transport: 2.20, Individuals: 13.01, Conglomerates: 0.07 },
-            { year: 2021, Agriculture: 29.14, Construction: 0.96, Communication: 0.30, Distribution: 13.19, Financial_Investiments: 0.31, Financial_Organizations: 5.91, Manufacturing: 11.88, Mining: 5.68, Services: 7.79, Transport: 1.62, Individuals: 23.22, Conglomerates: 0.02 },
-            { year: 2022, Agriculture: 24.47, Construction: 1.38, Communication: 0.61, Distribution: 13.50, Financial_Investiments: 0.16, Financial_Organizations: 5.41, Manufacturing: 12.38, Mining: 11.28, Services: 10.76, Transport: 1.42, Individuals: 18.60, Conglomerates: 0.03 }
-        ];
 
-        const dataset2 = [
-            { year: 2020, Individuals: 42, Agriculture: 20, Manufacturing: 17, Distribution: 12, Services: 9, Mining: 1 },
-            { year: 2021, Individuals: 46, Agriculture: 18, Manufacturing: 14, Distribution: 7, Services: 15, Mining: 0 },
-            { year: 2022, Individuals: 65, Agriculture: 8, Manufacturing: 9, Distribution: 8, Services: 9, Mining: 1 },
-            { year: 2023, Individuals: 22, Agriculture: 22, Manufacturing: 21, Distribution: 5, Services: 30, Mining: 0 },
-            { year: 2024, Individuals: 13, Agriculture: 9, Manufacturing: 65, Distribution: 3, Services: 7, Mining: 3 }
-        ];
-
-        const dataset3 = [
-            { year: 2018, Individuals: 51, Agriculture: 35, Manufacturing: 7, Communication: 0, Construction: 1, Transport: 0, Services: 3, Mining: 2, Distribution: 1 },
-            { year: 2019, Individuals: 45, Agriculture: 37, Manufacturing: 4, Communication: 0, Construction: 0, Transport: 0, Services: 8, Mining: 1, Distribution: 5 },
-            { year: 2020, Individuals: 34.1, Agriculture: 57.8, Manufacturing: 5.3, Communication: 0, Construction: 0.2, Transport: 0, Services: 0.9, Mining: 0.1, Distribution: 1.6 },
-            { year: 2021, Individuals: 38.36, Agriculture: 51.39, Manufacturing: 5.33, Communication: 0.03, Construction: 0.14, Transport: 0.13, Services: 1.10, Mining: 2.43, Distribution: 1.08 },
-            { year: 2022, Individuals: 41.16, Agriculture: 27.03, Manufacturing: 5.29, Communication: 0.00, Construction: 0.17, Transport: 1.75, Services: 8.88, Mining: 7.36, Distribution: 8.36 },
-            { year: 2023, Individuals: 32.38, Agriculture: 55.33, Manufacturing: 3.73, Communication: 0.00, Construction: 0.00, Transport: 1.01, Services: 1.71, Mining: 5.34, Distribution: 0.50 }
-        ];
-
-        const dataset4 = [
-            { year: 2018, Individuals: 28.70, Agriculture: 24.26, Mining: 3.25, Manufacturing: 8.01, Distribution: 16.48, Construction: 1.55, Transport: 1.23, Communication: 0.26, Services: 14.01, Financial_Organizations: 2.25 },
-            { year: 2019, Individuals: 5.58, Agriculture: 68.81, Mining: 3.75, Manufacturing: 4.04, Distribution: 9.35, Construction: 0.25, Transport: 0.37, Communication: 0.03, Services: 7.28, Financial_Organizations: 0.53 },
-            { year: 2020, Individuals: 6.91, Agriculture: 55.30, Mining: 10.08, Manufacturing: 2.67, Distribution: 19.67, Construction: 0.18, Transport: 0.24, Communication: 0.01, Services: 4.04, Financial_Organizations: 0.90 },
-            { year: 2021, Individuals: 10.02, Agriculture: 50.56, Mining: 7.37, Manufacturing: 4.34, Distribution: 17.92, Construction: 0.19, Transport: 0.14, Communication: 0.00, Services: 8.76, Financial_Organizations: 0.70 },
-            { year: 2022, Individuals: 10.02, Agriculture: 35.74, Mining: 10.04, Manufacturing: 12.89, Distribution: 17.17, Construction: 1.28, Transport: 0.26, Communication: 2.63, Services: 9.81, Financial_Organizations: 0.14 },
-            { year: 2023, Individuals: 26.20, Agriculture: 12.17, Mining: 19.06, Manufacturing: 16.39, Distribution: 16.07, Construction: 1.19, Transport: 0.35, Communication: 4.24, Services: 4.07, Financial_Organizations: 0.26 }
-        ];
-
-        
-
-
-        let currentData = dataset1;
-
-        const margin = { top: 40, right: 40, bottom: 50, left: 125 },
-            width = 900 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
-
-        const svg = d3.select("#bump-chart")
-            .append("svg")
-            .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-
-        function updateChartSize() {
-            const chartContainer = document.getElementById('bump-chart');
-            const containerWidth = chartContainer.clientWidth;
-            const containerHeight = containerWidth * (height + margin.top + margin.bottom) / (width + margin.left + margin.right);
-
-            d3.select("#bump-chart svg")
-                .attr("width", containerWidth)
-                .attr("height", containerHeight);
-
-            renderChart(currentData);
-        }
-
-        window.addEventListener('resize', updateChartSize);
-        updateChartSize(); // Initial call to set the size
-
-
-        function renderChart(data) {
-            svg.selectAll("*").remove();
-
-            const chartContainer = document.getElementById('bump-chart');
-            const containerWidth = chartContainer.clientWidth;
-            const containerHeight = containerWidth * (height + margin.top + margin.bottom) / (width + margin.left + margin.right);
-
-            const chartWidth = width;
-            const chartHeight = height;
-
-            const rankData = data.map(yearData => {
-                const sectors = Object.keys(yearData).filter(key => key !== "year");
-                sectors.sort((a, b) => yearData[b] - yearData[a]);
-                return { year: yearData.year, ranks: sectors };
-            });
-
-            const x = d3.scalePoint()
-                .domain(data.map(d => d.year))
-                .range([0, chartWidth]);
-
-            const y = d3.scaleLinear()
-                .domain([1, rankData[0].ranks.length])
-                .range([0, chartHeight]);
-
-            const color = {
-
-                "Agriculture": "#42bddf",
-                "Construction": "#261214",
-                "Communication": "#1B76FF",
-                "Distribution": "#4a4948",
-                "Financial_Investiments": "#FFBE00",
-                "Financial_Organizations": "#25064C",
-                "Manufacturing": "#ca1056",
-                "Mining": "#2a455b",
-                "Services": "#2e6368",
-                "Transport": "#c0b156",
-                "Individuals": "#f4b49b",
-                "Conglomerates": "#cfb4bd"
-            };
-
-            const tooltip = d3.select("#tooltip");
-            const sectors = Object.keys(data[0]).filter(d => d !== "year");
-
-            const radiusScale = d3.scaleLinear()
-                .domain([0, 100])
-                .range([13.5, 40]);
-
-            sectors.forEach(sector => {
-                const line = d3.line()
-                    .x(d => x(d.year))
-                    .y(d => y(rankData.find(r => r.year === d.year).ranks.indexOf(sector) + 1));
-
-                svg.append("path")
-                    .datum(data)
-                    .attr("class", `line line-${sector}`)
-                    .attr("d", line)
-                    .attr("stroke", color[sector])
-                    .attr("stroke-width", 7)
-                    .attr("fill", "none");
-
-                svg.selectAll(`.dot-${sector}`)
-                    .data(data)
-                    .enter().append("circle")
-                    .attr("class", "dot")
-                    .attr("cx", d => x(d.year))
-                    .attr("cy", d => y(rankData.find(r => r.year === d.year).ranks.indexOf(sector) + 1))
-                    .attr("r", d => radiusScale(d[sector]))
-                    .attr("fill", color[sector])
-                    .attr("stroke", color[sector])
-                    .attr("stroke-width", 2)
-                    .on("mouseover", (event, d) => {
-                        const rank = rankData.find(r => r.year === d.year).ranks.indexOf(sector) + 1;
-                        svg.selectAll(".line").style("opacity", 0.1);
-                        svg.select(`.line-${sector}`).style("opacity", 1);
-                        tooltip.transition().duration(200).style("opacity", 1);
-                        tooltip.html(`
-                            <strong>${sector}</strong><br>
-                            Year: ${d.year}<br>
-                            Rank: ${rank}<br>
-                            Value: ${d[sector]}
-                        `)
-                            .style("left", (event.pageX + 10) + "px")
-                            .style("top", (event.pageY - 28) + "px")
-                            .style("background-color", color[sector]);
-                    })
-                    .on("mouseout", () => {
-                        tooltip.transition().duration(500).style("opacity", 0);
-                        svg.selectAll(".line").style("opacity", 1);
-                    });
-
-                svg.selectAll(`.label-${sector}`)
-                    .data(data)
-                    .enter().append("text")
-                    .attr("class", "label")
-                    .attr("x", d => x(d.year))
-                    .attr("y", d => y(rankData.find(r => r.year === d.year).ranks.indexOf(sector) + 1))
-                    .attr("dy", ".35em")
-                    .attr("text-anchor", "middle")
-                    .attr("fill", "#fff")
-                    .style("font-size", "12px")
-                    .text(d => `${d[sector]}%`);
-            });
-
-            svg.append("g")
-                    .attr("transform", `translate(0,${chartHeight+19})`)
-                    .call(d3.axisBottom(x).tickFormat(d3.format("d")))
-                    .selectAll("text")
-                    .style("font-size", "15px");
-
-            svg.append("text")
-                    .attr("class", "x-axis-label")
-                    .attr("x", chartWidth / 2)
-                    .attr("y", chartHeight + margin.bottom  )
-                    .style("text-anchor", "middle")
-                    .style("font-size", "15px")
-                    .style("fill", "white")  // Set text color to white
-                    .text("Year of Annual Report");
-
-            svg.append("g")
-                    .attr("transform", `translate(-22, 0)`)
-                    .call(d3.axisLeft(y).ticks(rankData[0].ranks.length).tickFormat(d => d))
-                    .selectAll("text")
-                    .style("font-size", "14px")
-                    .style("fill", "white");  // Set text color to white ranking text
-
-           svg.append("text")
-                    .attr("class", "y-axis-label")
-                    .attr("x", -chartHeight / 2)
-                    .attr("y", -margin.left + 16)
-                    .attr("transform", "rotate(-90)")
-                    .style("text-anchor", "middle")
-                    .style("font-size", "22px")
-                    .style("fill", "white")  // Set text color to white rank word
-                    .text("Rank");
-
-
-
-            const initialYear = rankData[0];
-                svg.selectAll(".rank-label")
-                    .data(initialYear.ranks)
-                    .enter().append("text")
-                    .attr("class", "rank-label")
-                    .attr("x", -70)
-                    .attr("y", (d, i) => y(i + 1))
-                    .attr("dy", ".35em")
-                    .attr("text-anchor", "end")
-                    .style("font-size", "11px")
-                    .style("fill", d => color[d])
-                    .each(function(d) {
-                        const textElement = d3.select(this);
-                        const lines = d.split("_");
-                        textElement.text("");
-                        lines.forEach((line, i) => {
-                            textElement.append("tspan")
-                                .attr("x", -45)
-                                .attr("dy", i === 0 ? 0 : "1.2em")
-                                .text(line);
-                        });
-                    });
-        }
-
-        document.querySelectorAll("input[name='dataset']").forEach(radio => {
-            radio.addEventListener("change", (event) => {
-                currentData = event.target.value === "dataset1" ? dataset1 : dataset2;
-                renderChart(currentData);
-            });
-        });
-
-        renderChart(currentData);
-
-        function openChart(dataset) {
-            alert('Opening chart for ' + dataset);
-        }
-    </script>
    <script>
     let registrationData = [];
  
@@ -653,6 +424,8 @@
 
                 resultText.innerHTML = `
                     Registration Number: ${matchedRegistration.registration_number}<br>
+                    ${matchedRegistration.make ? `Make: ${matchedRegistration.make}<br>` : ''}
+                    ${matchedRegistration.model ? `Model: ${matchedRegistration.model}<br>` : ''}
                     Expiry Date: ${formattedExpiryDate}<br>
                     Terms Overdue: ${terms}<br>
                     Estimated Fees Owing: $${fees}
@@ -662,6 +435,161 @@
             }
 
             resultCard.style.display = 'block';
+        } catch (error) {
+            resultText.textContent = 'An error occurred while searching. Please try again.';
+            resultCard.style.display = 'block';
+        } finally {
+            // Hide spinner, enable button
+            searchButton.disabled = false;
+            searchSpinner.classList.add('d-none');
+        }
+    });
+</script>
+
+<script>
+    // Insurance Premiums Data
+    const insurancePremiumsData = [
+        {date: '29/5/2009', premium: 320},
+        
+    ];
+
+    // Specific dates to highlight
+    const specialDates = ['29/1/2020', '29/5/2020'];
+
+    // Function to create the bar chart
+    function createPremiumsChart() {
+        // Clear any existing chart
+        d3.select("#premiums-chart").html("");
+
+        // Set up chart dimensions
+        const margin = {top: 50, right: 50, bottom: 100, left: 100};
+        const width = 960 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select("#premiums-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // X Scale
+        const x = d3.scaleBand()
+            .range([0, width])
+            .domain(insurancePremiumsData.map(d => d.date))
+            .padding(0.1);
+
+        // Y Scale
+        const y = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(insurancePremiumsData, d => d.premium)]);
+
+        // Color function to highlight specific dates and quarters
+        const colorScale = d => {
+            // Check if date is in special dates
+            if (specialDates.includes(d.date)) {
+                return 'var(--secondary-color)'; // Bright highlight for special dates
+            }
+
+            // Quarter-end dates
+            const quarterMonths = ['29/1/', '29/5/', '29/9/'];
+            return quarterMonths.some(m => d.date.includes(m)) ? 
+                'var(--primary-color)' : // Quarter-end dates in primary color
+                '#4a4a6a'; // Default bar color
+        };
+
+        // Create bars
+        svg.selectAll(".bar")
+            .data(insurancePremiumsData)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.date))
+            .attr("width", x.bandwidth())
+            .attr("y", d => y(d.premium))
+            .attr("height", d => height - y(d.premium))
+            .attr("fill", colorScale);
+
+        // X Axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)")
+            .style("fill", "var(--text-color)");
+
+        // Y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y))
+            .selectAll("text")
+            .style("fill", "var(--text-color)");
+
+        // Y Axis Label
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Insurance Premiums")
+            .style("fill", "var(--text-color)");
+
+        // Chart Title
+        svg.append("text")
+            .attr("x", (width / 2))
+            .attr("y", 0 - (margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Zimbabwe Insurance Premiums Quarterly Trend")
+            .style("fill", "var(--text-color)");
+    }
+
+    document.getElementById('searchButton').addEventListener('click', async function () {
+        const searchInput = document.getElementById('searchInput').value.toUpperCase();
+        const resultCard = document.getElementById('resultCard');
+        const resultText = document.getElementById('resultText');
+        const searchButton = document.getElementById('searchButton');
+        const searchSpinner = document.getElementById('searchSpinner');
+        const chartSection = document.getElementById('premiums-chart-section');
+
+        // Show spinner, disable button
+        searchButton.disabled = true;
+        searchSpinner.classList.remove('d-none');
+        resultCard.style.display = 'none';
+        chartSection.style.display = 'none';
+
+        try {
+            // Fetch vehicle data from the API
+            const matchedRegistration = await fetchRegistrationData(searchInput);
+            
+            if (matchedRegistration) {
+                const { terms, fees, expiryDate } = calculateFees(matchedRegistration.expiry_date);
+                const formattedExpiryDate = formatExpiryDate(expiryDate);
+
+                resultText.innerHTML = `
+                    Registration Number: ${matchedRegistration.registration_number}<br>
+                    ${matchedRegistration.make ? `Make: ${matchedRegistration.make}<br>` : ''}
+                    ${matchedRegistration.model ? `Model: ${matchedRegistration.model}<br>` : ''}
+                    Expiry Date: ${formattedExpiryDate}<br>
+                    Terms Overdue: ${terms}<br>
+                    Estimated Fees Owing: $${fees}
+                `;
+            } else {
+                resultText.textContent = 'No matching registration number found.';
+            }
+
+            resultCard.style.display = 'block';
+
+            // 15-second delay before showing chart
+            await new Promise(resolve => setTimeout(resolve, 15000));
+            
+            // Create and show chart
+            createPremiumsChart();
+            chartSection.style.display = 'block';
+
         } catch (error) {
             resultText.textContent = 'An error occurred while searching. Please try again.';
             resultCard.style.display = 'block';
