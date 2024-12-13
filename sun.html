@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Speed vs Power</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRPV64YPR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GVRPV64YPR');
+  </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s ease;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 60px);
+            padding: 2rem;
+        }
+        .scale-container {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            padding-top: 20px;
+            padding-bottom: 60px;
+            padding-left: 60px;
+        }
+       
+        .hour-marker {
+            position: absolute;
+            bottom: 0;
+            width: 1px;
+            height: 10px;
+            background-color: #333;
+        }
+        .hour-label {
+            position: absolute;
+            bottom: -25px;
+            transform: translateX(-50%);
+            font-size: 12px;
+        }
+        .hour-bar {
+            position: absolute;
+            bottom: 2px;
+            width: 4px;
+            background-color: #007bff;
+            transform: translateX(-50%);
+        }
+        .sun {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            transform: translate(-50%, 50%);
+            cursor: pointer;
+            user-select: none;
+            z-index: 10;
+            bottom: 2px;
+        }
+        .sun-path {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            bottom: 2px;
+            left: 0;
+        }
+        .x-axis-label {
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+            
+        }
+        .y-axis-label {
+            position: absolute;
+            left: -60px;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            height: 100%;
+        }
+        .y-axis-label text {
+            transform: rotate(-90deg);
+            transform-origin: center;
+            fill: currentColor;
+        }
+        .y-axis {
+            position: absolute;
+            left: -05px;
+            top: 0;
+            bottom: 0px;
+            width: 2px;
+            background-color: #333;
+        }
+        .y-axis-tick {
+            position: absolute;
+            left: -5px;
+            width: 10px;
+            height: 1px;
+            background-color: #333;
+        }
+        .y-axis-tick-label {
+            position: absolute;
+            left: -35px;
+            transform: translateY(-50%);
+            font-size: 12px;
+        }
+ 
+
+        @media screen and (max-width: 480px) {
+    .scale-container {
+        padding-left: 40px; /* Reduced left padding for smaller screens */
+    }
+    
+    .y-axis-label {
+        left: -40px; /* Adjusted to prevent complete disappearance */
+        font-size: 12px;
+        transform: rotate(-90deg) translateX(50%) translateY(-10px); /* Additional adjustment */
+        white-space: nowrap; /* Prevent label from wrapping */
+    }
+    
+   .x-axis-label {
+    position: absolute;
+    bottom: -40px; /* Move label further down */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    font-weight: bold;
+    font-size: 14px; /* Optional: adjust font size for clarity */
+}
+
+    
+    .hour-label {
+        font-size: 10px; /* Smaller font for hour labels */
+        bottom: -20px; /* Adjust to prevent overlapping */
+    }
+    
+    .scale-container .scale {
+        bottom: 50px; /* Adjust scale position */
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Interactive Day Scale</h1>
+    </nav>
+    <div class="content">
+        <div class="scale-container">
+            <svg class="y-axis-label" height="100%" width="60" style="position: absolute; left: -60px;">
+                <text x="50%" y="50%" transform="rotate(-90, 30, 50%)">Speed (MB/s)</text>
+            </svg>
+            <div class="y-axis"></div>
+            <svg class="sun-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M25 100 Q50 0 75 100" stroke="#ffcc00" stroke-width="2" fill="none" />
+            </svg>
+            <div class="scale"></div>
+            <div class="sun" draggable="true"></div>
+            <div class="x-axis-label">Time (hrs)</div>
+        </div>
+    </div>
+
+    <script>
+        const scaleContainer = document.querySelector('.scale-container');
+        const scale = document.querySelector('.scale');
+        const sun = document.querySelector('.sun');
+        const sunPath = document.querySelector('.sun-path path');
+        const yAxis = document.querySelector('.y-axis');
+
+        // Sample data for hour bar heights (replace with your own data)
+        //const hourData = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+        //average
+        //const hourData = [4.5,3.8,3.5,4.1,5.3,5.0,3.8,3.3,4.0,3.2,4.2,4.6,4.5,4.5,4.1,4.0,4.1,4.8,4.0,4.3,4.7,4.5,4.3,4.6];
+        //download spee
+        const hourData = [5.0,5.4,4.4,4.9,5.8,6.3,6.2,4.6,4.7,3.0,4.5,4.8,4.7,4.6,4.1,4.6,4.7,4.9,4.7,4.3,5.5,4.6,4.3,4.5]
+        for (let i = 0; i <= 24; i++) {
+            const marker = document.createElement('div');
+            marker.className = 'hour-marker';
+            marker.style.left = `${(i / 24) * 100}%`;
+            scale.appendChild(marker);
+
+            const label = document.createElement('div');
+            label.className = 'hour-label';
+            label.textContent = i;
+            label.style.left = `${(i / 24) * 100}%`;
+            scaleContainer.appendChild(label);
+
+            const bar = document.createElement('div');
+            bar.className = 'hour-bar';
+            bar.style.left = `${(i / 24) * 100}%`;
+            bar.style.height = `${hourData[i] * 20}px`; // Scale to fit within the container
+            scaleContainer.appendChild(bar);
+        }
+
+        // Add y-axis ticks and labels
+        for (let i = 0; i <= 5; i++) {
+            const tick = document.createElement('div');
+            tick.className = 'y-axis-tick';
+            tick.style.bottom = `${(i / 5) * 100}%`;
+            yAxis.appendChild(tick);
+
+            const label = document.createElement('div');
+            label.className = 'y-axis-tick-label';
+            label.textContent = i;
+            label.style.bottom = `${(i / 5) * 100}%`;
+            yAxis.appendChild(label);
+        }
+
+        function updateSunPosition(x) {
+            const scaleRect = scale.getBoundingClientRect();
+            const sunX = Math.max(scaleRect.width * 0.25, Math.min(x - scaleRect.left, scaleRect.width * 0.75));
+            const sunPercentage = (sunX - scaleRect.width * 0.25) / (scaleRect.width * 0.5);
+            const sunHour = 6 + sunPercentage * 12;
+
+            sun.style.left = `${25 + sunPercentage * 50}%`;
+
+            // Update sun's vertical position based on parabolic path
+            const yPercentage = 1 - 4 * (sunPercentage - 0.5) ** 2;
+            sun.style.bottom = `${yPercentage * 100 + 2}px`;
+
+            // Update parabolic path
+            const pathStartX = 25;
+            const pathEndX = 75;
+            const pathMidX = 25 + sunPercentage * 50;
+            const pathMidY = yPercentage * 100;
+            sunPath.setAttribute('d', `M${pathStartX} 100 Q${pathMidX} ${100 - pathMidY} ${pathEndX} 100`);
+
+            // Update the background color based on the sun's position
+            const hue = Math.floor(200 + sunPercentage * 160) % 360; // Cycle through blue tones
+            document.body.style.backgroundColor = `hsl(${hue}, 70%, 90%)`;
+        }
+
+        // Initialize sun position at 6 AM (25% of the scale)
+        updateSunPosition(scaleContainer.getBoundingClientRect().left + scaleContainer.offsetWidth * 0.25);
+
+        // Make sun draggable
+        let isDragging = false;
+
+        sun.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updateSunPosition(e.clientX);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updateSunPosition(e.clientX);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Touch events for mobile devices
+        sun.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            updateSunPosition(e.touches[0].clientX);
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                updateSunPosition(e.touches[0].clientX);
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
+
