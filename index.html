@@ -418,8 +418,8 @@
 
                 resultText.innerHTML = `
                     Registration Number: ${matchedRegistration.registration_number}<br>
-                    ${matchedRegistration.make ? `Make: ${matchedRegistration.make}<br>` : ''}
-                    ${matchedRegistration.model ? `Model: ${matchedRegistration.model}<br>` : ''}
+                    ${matchedRegistration.make ? `Make: ${matchedRegistration.make}<br>` : 'Make: Not available<br>'}
+                    ${matchedRegistration.model ? `Model: ${matchedRegistration.model}<br>` : 'Model: Not available<br>'}
                     Expiry Date: ${formattedExpiryDate}<br>
                     Terms Overdue: ${terms}<br>
                     Estimated Fees Owing: $${fees}
@@ -430,7 +430,9 @@
 
             resultCard.style.display = 'block';
         } catch (error) {
-            resultText.textContent = 'An error occurred while searching. Please try again.';
+            resultText.textContent = error.message === "Request limit exceeded for today" 
+                ? 'You have exceeded the request limit for today. Please try again later.' 
+                : 'An error occurred while searching. Please try again.';
             resultCard.style.display = 'block';
         } finally {
             // Hide spinner, enable button
