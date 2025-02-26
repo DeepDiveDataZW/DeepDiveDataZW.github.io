@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bar Chart - Zimbabwe 2012 Census</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .chart-container {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      margin-bottom: 40px;
+    }
+     #mergedChart {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Zimbabwe 2012 Census</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Percent Women by Age at First Live Birth and Current Age (Zimbabwe 2012 Census)</h1>
+    <div class="chart-container">
+      <canvas id="mergedChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Data for Merged Chart
+    const ageGroups = ["15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49"];
+
+    // Overall Data (Table 7.4)
+    const overallData = {
+      "15-19": [9.4, 23.3, 21.0, 17.1, 13.3, 8.7, 7.1],
+      "20-24": [null, 18.0, 26.4, 20.3, 16.6, 11.3, 7.4],
+      "25-29": [null, null, 25.5, 27.8, 20.6, 15.9, 10.2],
+      "30-34": [null, null, null, 30.0, 30.8, 22.0, 17.2],
+      "35-39": [null, null, null, null, 37.3, 36.7, 26.0],
+      "40-44": [null, null, null, null, null, 51.7, 48.3],
+      "45-49": [null, null, null, null, null, null, 100.0]
+    };
+
+    // Rural Data (Table 7.5 - Rural)
+    const ruralData = {
+      "15-19": [10.2, 23.4, 20.5, 16.6, 13.3, 8.8, 7.2],
+      "20-24": [null, 18.1, 25.2, 19.8, 17.1, 11.8, 8.0],
+      "25-29": [null, null, 23.0, 26.6, 21.7, 17.0, 11.6],
+      "30-34": [null, null, null, 26.8, 30.4, 22.4, 20.4],
+      "35-39": [null, null, null, null, 35.2, 35.6, 29.2],
+      "40-44": [null, null, null, null, null, 45.7, 54.3],
+      "45-49": [null, null, null, null, null, null, 100.0]
+    };
+
+    // Urban Data (Table 7.5 - Urban)
+    const urbanData = {
+      "15-19": [7.5, 23.0, 22.5, 18.4, 13.2, 8.5, 6.9],
+      "20-24": [null, 18.0, 28.0, 20.9, 16.0, 10.6, 6.5],
+      "25-29": [null, null, 27.7, 28.8, 19.7, 14.9, 8.9],
+      "30-34": [null, null, null, 32.9, 31.2, 21.7, 14.1],
+      "35-39": [null, null, null, null, 39.5, 37.9, 22.6],
+      "40-44": [null, null, null, null, null, 59.4, 40.6],
+      "45-49": [null, null, null, null, null, null, 100.0]
+    };
+
+    // Prepare datasets for the merged chart
+    const datasets = [];
+    const colors = [
+      'rgba(255, 99, 132, 0.6)', // Pink
+      'rgba(54, 162, 235, 0.6)', // Blue
+      'rgba(75, 192, 192, 0.6)', // Teal
+      'rgba(153, 102, 255, 0.6)', // Purple
+      'rgba(255, 159, 64, 0.6)', // Orange
+      'rgba(255, 205, 86, 0.6)', // Yellow
+      'rgba(201, 203, 207, 0.6)' // Gray
+    ];
+
+    // Add Overall datasets
+    Object.keys(overallData).forEach((ageGroup, index) => {
+      datasets.push({
+        label: `Overall: Age at First Live Birth ${ageGroup}`,
+        data: overallData[ageGroup],
+        backgroundColor: colors[index],
+        stack: 'Overall'
+      });
+    });
+
+    // Add Rural datasets
+    Object.keys(ruralData).forEach((ageGroup, index) => {
+      datasets.push({
+        label: `Rural: Age at First Live Birth ${ageGroup}`,
+        data: ruralData[ageGroup],
+        backgroundColor: colors[index],
+        stack: 'Rural'
+      });
+    });
+
+    // Add Urban datasets
+    Object.keys(urbanData).forEach((ageGroup, index) => {
+      datasets.push({
+        label: `Urban: Age at First Live Birth ${ageGroup}`,
+        data: urbanData[ageGroup],
+        backgroundColor: colors[index],
+        stack: 'Urban'
+      });
+    });
+
+    // Merged Chart Configuration
+    const ctx = document.getElementById('mergedChart').getContext('2d');
+    const mergedChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ageGroups,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Current Age of Woman'
+            },
+            stacked: true
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Percentage'
+            },
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Percent Women by Age at First Live Birth and Current Age (Overall, Rural, Urban)',
+            font: {
+              size: 18
+            }
+          },
+          legend: {
+            position: 'top'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
